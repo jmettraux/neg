@@ -11,7 +11,7 @@ describe Leg::Parser::StringParser do
       parser = Leg::Parser::StringParser.new('xxx')
 
       parser.parse('xxx').should ==
-        [ 'xxx', [ 0, 1, 1 ] ]
+        [ nil, true, 'xxx', [ 0, 1, 1 ] ]
     end
 
     it 'fails gracefully' do
@@ -19,7 +19,7 @@ describe Leg::Parser::StringParser do
       parser = Leg::Parser::StringParser.new('xxx')
 
       parser.parse('yyy').should ==
-        'expected "xxx", got "yyy" at line 1, column 1'
+        [ nil, false, 'expected "xxx", got "yyy"', [ 0, 1, 1 ] ]
     end
   end
 
@@ -33,7 +33,8 @@ describe Leg::Parser::StringParser do
         end
       end
 
-      Parser.new.parse('x').should == [ :root, 'x', [ 0, 1, 1 ] ]
+      Parser.new.parse('x').should ==
+        [ :root, true, 'x', [ 0, 1, 1 ] ]
     end
   end
 end

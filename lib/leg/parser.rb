@@ -41,8 +41,9 @@ module Leg
       resolve_non_terminals
 
       result = @non_terminals[@root].parse(s)
+      result[0] = @root
 
-      result.is_a?(Array) ? [ @root ] + result : result
+      result
     end
 
     protected
@@ -64,7 +65,20 @@ module Leg
     # sub parsers
     #++
 
-    class StringParser
+    class SubParser
+
+      def error(s, i)
+
+        [ nil, false, error_message(s), i.position ]
+      end
+
+      def success(o, i)
+
+        [ nil, true, o, i.position ]
+      end
+    end
+
+    class StringParser < SubParser
 
       def initialize(s)
 
@@ -76,12 +90,12 @@ module Leg
         i = Leg::Input(i)
         s = i.read(@s.length)
 
-        s == @s ? [ @s, i.position ] : error(s, i)
+        send(s == @s ? :success : :error, s, i)
       end
 
-      def error(s, i)
+      def error_message(s)
 
-        "expected #{@s.inspect}, got #{s.inspect} at #{i.line_and_column(', ')}"
+        "expected #{@s.inspect}, got #{s.inspect}"
       end
     end
   end
