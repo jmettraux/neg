@@ -48,24 +48,14 @@ module Leg
     # sub parsers
     #++
 
-    class BaseParser
-
-      protected
-
-      def to_input(o)
-
-        o.is_a?(Leg::Input) ? o : Leg::Input.new(o)
-      end
-    end
-
-    class StringParser < BaseParser
+    class StringParser
 
       def initialize(s)
         @s = s
       end
 
       def parse(i)
-        i = to_input(i)
+        i = Leg::Input(i)
         s = i.read(@s.length)
         s == @s ? [ @s, i.position ] : error(ss, i)
       end

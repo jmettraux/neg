@@ -25,9 +25,10 @@
 
 module Leg
 
-  #--
-  # input class
-  #++
+  def self.Input(o)
+
+    o.is_a?(Input) ? o : Input.new(o)
+  end
 
   class Input
 
