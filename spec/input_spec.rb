@@ -2,11 +2,11 @@
 require 'spec_helper'
 
 
-describe Leg::Parser::Input do
+describe Leg::Input do
 
   before(:each) do
 
-    @input = Leg::Parser::Input.new("the quick blue fox\n jumped the shark\n")
+    @input = Leg::Input.new("the quick blue fox\n jumped the shark\n")
   end
 
   it 'starts at zero' do
