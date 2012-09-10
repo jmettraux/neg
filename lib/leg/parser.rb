@@ -27,6 +27,25 @@ require 'leg/version'
 
 class Leg::Parser
 
+  def parse(s)
+    @non_terminals = fetch_non_terminals
+    @non_terminals.first.parse(s)
+  end
+
+  protected
+
+  def fetch_non_terminals
+    (self.methods - Leg::Parser.instance_methods).collect { |m| self.send(m) }
+  end
+
+  def `(s)
+    StringParser.new(s)
+  end
+
+  #--
+  # sub parsers
+  #++
+
   class BaseParser
   end
 
@@ -39,18 +58,6 @@ class Leg::Parser
     def parse(s)
       s == @s
     end
-  end
-
-  def `(s)
-    StringParser.new(s)
-  end
-
-  def parse(s)
-    @@non_terminals.first.parse(s)
-  end
-
-  def self.method_added(m)
-    (@@non_terminals ||= []) << self.new.send(m)
   end
 end
 
