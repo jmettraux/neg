@@ -39,6 +39,33 @@ class Leg::Parser
     StringParser.new(s)
   end
 
+  class Input
+    def initialize(s)
+      @s = s
+      rewind
+    end
+    def read(count)
+      @s[@offset, count]
+    end
+    def skip(count)
+      count.times do
+        @offset = @offset + 1
+        if @s[@offset, 1] == "\n"
+          @line = @line + 1
+          @column = 0
+        else
+          @column = @column + 1
+        end
+      end
+    end
+    def rewind(offset=0)
+      @offset = 0
+      @line = 1
+      @column = 1
+      skip(offset)
+    end
+  end
+
   #--
   # sub parsers
   #++
