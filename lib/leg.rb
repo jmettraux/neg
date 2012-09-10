@@ -43,6 +43,10 @@ module Leg
       StringParser.new(s)
     end
 
+    #--
+    # input class
+    #++
+
     class Input
 
       def initialize(s)

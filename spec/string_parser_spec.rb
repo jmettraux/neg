@@ -21,7 +21,7 @@ describe Leg::Parser::StringParser do
         end
       end
 
-      Parser.new.parse('x').should == [ 'x', [ 0, 1, 1 ] ]
+      Parser.new.parse('x').should == [ :root, 'x', [ 0, 1, 1 ] ]
     end
   end
 end
