@@ -59,7 +59,9 @@ module Leg
       def skip(count)
 
         count.times do
+
           @offset = @offset + 1
+
           if @s[@offset, 1] == "\n"
             @line = @line + 1
             @column = 0
@@ -82,6 +84,13 @@ module Leg
 
         [ @offset, @line, @column ]
       end
+
+      def line_and_column(join=nil)
+
+        a = [ "line #{@line}", "column #{@column}" ]
+
+        join ? a.join(join) : a
+      end
     end
 
     #--
@@ -89,6 +98,13 @@ module Leg
     #++
 
     class BaseParser
+
+      protected
+
+      def to_input(o)
+
+        o.is_a?(Leg::Parser::Input) ? o : Leg::Parser::Input.new(o)
+      end
     end
 
     class StringParser < BaseParser
@@ -97,8 +113,14 @@ module Leg
         @s = s
       end
 
-      def parse(s)
-        s == @s
+      def parse(i)
+        i = to_input(i)
+        s = i.read(@s.length)
+        s == @s ? [ @s, i.position ] : error(ss, i)
+      end
+
+      def error(s, i)
+        "expected #{@s.inspect}, got #{s.inspect} at #{i.line_and_column}"
       end
     end
   end

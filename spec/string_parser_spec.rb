@@ -8,7 +8,7 @@ describe Leg::Parser::StringParser do
 
     parser = Leg::Parser::StringParser.new('xxx')
 
-    parser.parse('xxx').should == true
+    parser.parse('xxx').should == [ 'xxx', [ 0, 1, 1 ] ]
   end
 
   context 'within Leg::Parser' do
@@ -21,7 +21,7 @@ describe Leg::Parser::StringParser do
         end
       end
 
-      Parser.new.parse('x').should == true
+      Parser.new.parse('x').should == [ 'x', [ 0, 1, 1 ] ]
     end
   end
 end

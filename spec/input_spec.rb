@@ -50,8 +50,17 @@ describe Leg::Parser::Input do
 
     @input.skip(21)
     @input.rewind(22)
+
     @input.read(4).should == 'mped'
     @input.position.should == [ 22, 2, 4 ]
+  end
+
+  it 'returns #line_and_column' do
+
+    @input.skip(22)
+
+    @input.line_and_column.should == [ 'line 2', 'column 4' ]
+    @input.line_and_column(', ').should == 'line 2, column 4'
   end
 end
 
