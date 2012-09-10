@@ -30,14 +30,30 @@ module Leg
 
   class Parser
 
+    def initialize
+
+      @root = nil
+      @non_terminals = {}
+    end
+
     def parse(s)
 
-      @non_terminals =
-        (self.methods - Leg::Parser.instance_methods).collect { |m| self.send(m) }
-      @non_terminals.first.parse(s)
+      resolve_non_terminals
+
+      result = @non_terminals[@root].parse(s)
+
+      result.is_a?(Array) ? [ @root ] + result : result
     end
 
     protected
+
+    def resolve_non_terminals
+
+      (self.methods - Leg::Parser.instance_methods).each { |m|
+        @root ||= m.to_sym
+        @non_terminals[m.to_sym] = send(m)
+      }
+    end
 
     def `(s)
 
@@ -51,17 +67,21 @@ module Leg
     class StringParser
 
       def initialize(s)
+
         @s = s
       end
 
       def parse(i)
+
         i = Leg::Input(i)
         s = i.read(@s.length)
-        s == @s ? [ @s, i.position ] : error(ss, i)
+
+        s == @s ? [ @s, i.position ] : error(s, i)
       end
 
       def error(s, i)
-        "expected #{@s.inspect}, got #{s.inspect} at #{i.line_and_column}"
+
+        "expected #{@s.inspect}, got #{s.inspect} at #{i.line_and_column(', ')}"
       end
     end
   end

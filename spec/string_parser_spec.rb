@@ -4,11 +4,23 @@ require 'spec_helper'
 
 describe Leg::Parser::StringParser do
 
-  it 'parses an exact string' do
+  context 'standalone' do
 
-    parser = Leg::Parser::StringParser.new('xxx')
+    it 'parses' do
 
-    parser.parse('xxx').should == [ 'xxx', [ 0, 1, 1 ] ]
+      parser = Leg::Parser::StringParser.new('xxx')
+
+      parser.parse('xxx').should ==
+        [ 'xxx', [ 0, 1, 1 ] ]
+    end
+
+    it 'fails gracefully' do
+
+      parser = Leg::Parser::StringParser.new('xxx')
+
+      parser.parse('yyy').should ==
+        'expected "xxx", got "yyy" at line 1, column 1'
+    end
   end
 
   context 'within Leg::Parser' do
