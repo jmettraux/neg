@@ -81,6 +81,16 @@ module Leg
 
         AlternativeParser.new(self, pa)
       end
+
+      def parse(input_or_string)
+
+        input = Leg::Input(input_or_string)
+        start = input.position
+
+        success, result = do_parse(input)
+
+        [ nil, success, start, result ]
+      end
     end
 
     class StringParser < SubParser
@@ -90,17 +100,15 @@ module Leg
         @s = s
       end
 
-      def parse(i)
+      def do_parse(i)
 
-        i = Leg::Input(i)
-        start = i.position
         s = i.read(@s.length)
 
         if s == @s
           i.skip(@s.length)
-          [ nil, true, start, @s ]
+          [ true, @s ]
         else
-          [ nil, false, start, "expected #{@s.inspect}, got #{s.inspect}" ]
+          [ false, "expected #{@s.inspect}, got #{s.inspect}" ]
         end
       end
     end
@@ -115,10 +123,7 @@ module Leg
 
     class SequenceParser < CompositeParser
 
-      def parse(i)
-
-        i = Leg::Input(i)
-        start = i.position
+      def do_parse(i)
 
         results = []
 
@@ -128,29 +133,17 @@ module Leg
           break unless results.last[1]
         end
 
-        success = results.last[1]
-
-        [ nil, success, start, results ]
+        [ results.last[1], results ]
       end
     end
 
     class AlternativeParser < CompositeParser
 
-      def parse(i)
+      def do_parse(i)
 
-        i = Leg::Input(i)
-        start = i.position
+        results = @children.collect { |c| c.parse(i) }
 
-        results = []
-
-        @children.each do |c|
-
-          results << c.parse(i)
-        end
-
-        success = !! results.find { |r| r[1] }
-
-        [ nil, success, start, results ]
+        [ !!results.find { |r| r[1] }, results ]
       end
     end
   end
