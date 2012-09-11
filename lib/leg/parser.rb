@@ -28,6 +28,8 @@ require 'leg/input'
 
 module Leg
 
+  class UnconsumedInputError < StandardError; end
+
   class Parser
 
     def initialize
@@ -38,9 +40,18 @@ module Leg
 
     def parse(s)
 
+      i = Leg::Input(s)
+
       resolve_non_terminals
 
-      result = @non_terminals[@root].parse(s)
+      result = @non_terminals[@root].parse(i)
+
+      if result[1] && ( ! i.eoi?)
+        rem = i.read(7)
+        rem = rem + '...' if rem.length >= 7
+        raise UnconsumedInputError.new("remaining: #{rem.inspect}")
+      end
+
       result[0] = @root
 
       result

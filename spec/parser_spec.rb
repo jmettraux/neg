@@ -83,5 +83,34 @@ describe Leg::Parser do
       text.children.collect(&:class).should == [ Leg::Parser::StringParser ] * 3
     end
   end
+
+  describe '.parse' do
+
+    let(:parser) {
+      Class.new(Leg::Parser) do
+        def text
+          `x`
+        end
+      end
+    }
+
+    it 'raises on unconsumed input' do
+
+      lambda {
+        parser.parse('xy')
+      }.should raise_error(
+        Leg::UnconsumedInputError,
+        'remaining: "y"')
+    end
+
+    it 'raises on unconsumed input (...)' do
+
+      lambda {
+        parser.parse('xyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy')
+      }.should raise_error(
+        Leg::UnconsumedInputError,
+        'remaining: "yyyyyyy..."')
+    end
+  end
 end
 
