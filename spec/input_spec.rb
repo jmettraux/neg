@@ -14,53 +14,54 @@ describe Leg::Input do
     @input.position.should == [ 0, 1, 1 ]
   end
 
-  it "reads but doesn't move" do
+  describe '#read' do
 
-    @input.read(5).should == 'the q'
+    it "reads but doesn't move" do
 
-    @input.position.should == [ 0, 1, 1 ]
+      @input.read(5).should == 'the q'
+
+      @input.position.should == [ 0, 1, 1 ]
+    end
   end
 
-  it 'skips (same line)' do
+  describe '#skip' do
 
-    @input.skip(5)
+    it 'skips (same line)' do
 
-    @input.read(4).should == 'uick'
-    @input.position.should == [ 5, 1, 6 ]
+      @input.skip(5)
+
+      @input.read(4).should == 'uick'
+      @input.position.should == [ 5, 1, 6 ]
+    end
+
+    it 'skips (new line)' do
+
+      @input.skip(21)
+
+      @input.read(4).should == 'umpe'
+      @input.position.should == [ 21, 2, 3 ]
+    end
   end
 
-  it 'skips (new line)' do
+  describe '#rewind' do
 
-    @input.skip(21)
+    it 'rewinds' do
 
-    @input.read(4).should == 'umpe'
-    @input.position.should == [ 21, 2, 3 ]
-  end
+      @input.skip(21)
+      @input.rewind
 
-  it 'rewinds' do
+      @input.read(5).should == 'the q'
+      @input.position.should == [ 0, 1, 1 ]
+    end
 
-    @input.skip(21)
-    @input.rewind
+    it 'rewinds with an offset' do
 
-    @input.read(5).should == 'the q'
-    @input.position.should == [ 0, 1, 1 ]
-  end
+      @input.skip(21)
+      @input.rewind(22)
 
-  it 'rewinds with an offset' do
-
-    @input.skip(21)
-    @input.rewind(22)
-
-    @input.read(4).should == 'mped'
-    @input.position.should == [ 22, 2, 4 ]
-  end
-
-  it 'returns #line_and_column' do
-
-    @input.skip(22)
-
-    @input.line_and_column.should == [ 'line 2', 'column 4' ]
-    @input.line_and_column(', ').should == 'line 2, column 4'
+      @input.read(4).should == 'mped'
+      @input.position.should == [ 22, 2, 4 ]
+    end
   end
 end
 

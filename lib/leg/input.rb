@@ -71,12 +71,6 @@ module Leg
 
       [ @offset, @line, @column ]
     end
-
-    def line_and_column(join=nil)
-
-      a = [ "line #{@line}", "column #{@column}" ]
-
-      join ? a.join(join) : a
-    end
   end
 end
+
