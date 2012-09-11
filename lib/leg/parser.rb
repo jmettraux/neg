@@ -46,17 +46,6 @@ module Leg
       result
     end
 
-#    def inspect
-#
-#      resolve_non_terminals
-#
-#      s = []
-#      s << "#{self.class.name}:"
-#      s << "  root: #{@root}"
-#      s.concat(@non_terminals.collect { |k, v| "  #{k} ::= #{v.to_s}" })
-#      s.join("\n")
-#    end
-
     def self.parse(s)
 
       self.new.parse(s)
@@ -122,30 +111,14 @@ module Leg
           [ false, "expected #{@s.inspect}, got #{s.inspect}" ]
         end
       end
-
-#      def to_s
-#
-#        "`#{@s}`"
-#      end
     end
 
     class CompositeParser < SubParser
-
-      attr_reader :children
 
       def initialize(left, right)
 
         @children = [ left, right ]
       end
-
-#      def to_s
-#
-#        '(' +
-#        @children.collect(
-#          &:to_s
-#        ).join(self.class == SequenceParser ? ' + ' : ' | ') +
-#        ')'
-#      end
     end
 
     class SequenceParser < CompositeParser
