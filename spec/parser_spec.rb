@@ -84,6 +84,25 @@ describe Leg::Parser do
     end
   end
 
+  describe 'non-terminal' do
+
+    let(:parser) {
+      Class.new(Leg::Parser) do
+        def text;  x | y;       end
+        def x;     `x`;         end
+        def y;     `yy` | `y`;  end
+      end
+    }
+
+    it 'parses' do
+
+      parser.parse('x')[1].should == true
+      parser.parse('y')[1].should == true
+      parser.parse('yy')[1].should == true
+      parser.parse('z')[1].should == false
+    end
+  end
+
   describe '.parse' do
 
     let(:parser) {
