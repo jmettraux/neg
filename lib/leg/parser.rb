@@ -76,6 +76,11 @@ module Leg
 
         SequenceParser.new(self, pa)
       end
+
+      def |(pa)
+
+        AlternativeParser.new(self, pa)
+      end
     end
 
     class StringParser < SubParser
@@ -100,12 +105,15 @@ module Leg
       end
     end
 
-    class SequenceParser < SubParser
+    class CompositeParser < SubParser
 
       def initialize(left, right)
 
         @children = [ left, right ]
       end
+    end
+
+    class SequenceParser < CompositeParser
 
       def parse(i)
 
@@ -121,6 +129,26 @@ module Leg
         end
 
         success = results.last[1]
+
+        [ nil, success, start, results ]
+      end
+    end
+
+    class AlternativeParser < CompositeParser
+
+      def parse(i)
+
+        i = Leg::Input(i)
+        start = i.position
+
+        results = []
+
+        @children.each do |c|
+
+          results << c.parse(i)
+        end
+
+        success = !! results.find { |r| r[1] }
 
         [ nil, success, start, results ]
       end
