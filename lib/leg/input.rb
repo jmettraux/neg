@@ -71,6 +71,11 @@ module Leg
 
       [ @offset, @line, @column ]
     end
+
+    def eoi?
+
+      @offset >= @s.length
+    end
   end
 end
 

@@ -63,5 +63,20 @@ describe Leg::Input do
       @input.position.should == [ 22, 2, 4 ]
     end
   end
+
+  describe '#eoi?' do
+
+    it 'returns false if the end of input has not yet been reached' do
+
+      @input.eoi?.should == false
+    end
+
+    it 'returns true if the end of input has been reached' do
+
+      @input.skip(37)
+
+      @input.eoi?.should == true
+    end
+  end
 end
 
