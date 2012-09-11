@@ -46,6 +46,11 @@ module Leg
       result
     end
 
+    def self.parse(s)
+
+      self.new.parse(s)
+    end
+
     protected
 
     def resolve_non_terminals
@@ -67,14 +72,9 @@ module Leg
 
     class SubParser
 
-      def error(s, i)
+      def +(pa)
 
-        [ nil, false, error_message(s), i.position ]
-      end
-
-      def success(o, i)
-
-        [ nil, true, o, i.position ]
+        SequenceParser.new(self, pa)
       end
     end
 
@@ -88,14 +88,41 @@ module Leg
       def parse(i)
 
         i = Leg::Input(i)
+        start = i.position
         s = i.read(@s.length)
 
-        send(s == @s ? :success : :error, s, i)
+        if s == @s
+          i.skip(@s.length)
+          [ nil, true, start, @s ]
+        else
+          [ nil, false, start, "expected #{@s.inspect}, got #{s.inspect}" ]
+        end
+      end
+    end
+
+    class SequenceParser < SubParser
+
+      def initialize(left, right)
+
+        @children = [ left, right ]
       end
 
-      def error_message(s)
+      def parse(i)
 
-        "expected #{@s.inspect}, got #{s.inspect}"
+        i = Leg::Input(i)
+        start = i.position
+
+        results = []
+
+        @children.each do |c|
+
+          results << c.parse(i)
+          break unless results.last[1]
+        end
+
+        success = results.last[1]
+
+        [ nil, success, start, results ]
       end
     end
   end
