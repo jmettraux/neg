@@ -27,9 +27,7 @@ describe Leg::Parser::StringParser do
 
     let(:parser) {
       Class.new(Leg::Parser) do
-        def root
-          `x`
-        end
+        root == `x`
       end
     }
 

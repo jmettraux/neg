@@ -6,17 +6,13 @@ describe Leg::Parser do
 
   describe 'sequence' do
 
-    let(:parser) {
-      Class.new(Leg::Parser) do
-        def text
-          `x` + `y`
-        end
-      end
-    }
+    class SeqParser < Leg::Parser
+      text == `x` + `y`
+    end
 
     it 'parses' do
 
-      parser.parse('xy').should ==
+      SeqParser.parse('xy').should ==
         [ :text, true, [ 0, 1, 1 ], [
           [ nil, true, [ 0, 1, 1 ], 'x' ],
           [ nil, true, [ 1, 1, 2 ], 'y' ] ] ]
@@ -24,7 +20,7 @@ describe Leg::Parser do
 
     it 'fails gracefully' do
 
-      parser.parse('xx').should ==
+      SeqParser.parse('xx').should ==
         [ :text, false, [ 0, 1, 1 ], [
           [ nil, true, [ 0, 1, 1 ], 'x' ],
           [ nil, false, [ 1, 1, 2 ], 'expected "y", got "x"' ] ] ]
@@ -33,30 +29,27 @@ describe Leg::Parser do
     it 'goes beyond two elements' do
 
       parser = Class.new(Leg::Parser) do
-        def text
-          `x` + `y` + `z`
-        end
-      end.new
+        text == `x` + `y` + `z`
+      end
 
       text = parser.text
-      text.class.should == Leg::Parser::SequenceParser
-      text.children.collect(&:class).should == [ Leg::Parser::StringParser ] * 3
+
+      text.class.should ==
+        Leg::Parser::NonTerminalParser
+      text.child.children.collect(&:class).should ==
+        [ Leg::Parser::StringParser ] * 3
     end
   end
 
   describe 'alternative' do
 
-    let(:parser) {
-      Class.new(Leg::Parser) do
-        def text
-          `x` | `y`
-        end
-      end
-    }
+    class AltParser < Leg::Parser
+      text == `x` | `y`
+    end
 
     it 'parses' do
 
-      parser.parse('x').should ==
+      AltParser.parse('x').should ==
         [ :text, true, [ 0, 1, 1 ], [
           [ nil, true, [ 0, 1, 1 ], 'x' ],
           [ nil, false, [ 1, 1, 2 ], 'expected "y", got ""' ] ] ]
@@ -64,7 +57,7 @@ describe Leg::Parser do
 
     it 'fails gracefully' do
 
-      parser.parse('z').should ==
+      AltParser.parse('z').should ==
         [ :text, false, [ 0, 1, 1 ], [
           [ nil, false, [ 0, 1, 1 ], 'expected "x", got "z"' ],
           [ nil, false, [ 0, 1, 1 ], 'expected "y", got "z"' ] ] ]
@@ -73,14 +66,15 @@ describe Leg::Parser do
     it 'goes beyond two elements' do
 
       parser = Class.new(Leg::Parser) do
-        def text
-          `x` | `y` | `z`
-        end
-      end.new
+        text == `x` | `y` | `z`
+      end
 
       text = parser.text
-      text.class.should == Leg::Parser::AlternativeParser
-      text.children.collect(&:class).should == [ Leg::Parser::StringParser ] * 3
+
+      text.class.should ==
+        Leg::Parser::NonTerminalParser
+      text.child.children.collect(&:class).should ==
+        [ Leg::Parser::StringParser ] * 3
     end
   end
 
@@ -88,9 +82,9 @@ describe Leg::Parser do
 
     let(:parser) {
       Class.new(Leg::Parser) do
-        def text;  x | y;       end
-        def x;     `x`;         end
-        def y;     `yy` | `y`;  end
+        text == x | y
+        x    == `x`
+        y    == `yy` | `y`
       end
     }
 
@@ -107,9 +101,7 @@ describe Leg::Parser do
 
     let(:parser) {
       Class.new(Leg::Parser) do
-        def text
-          `x`
-        end
+        text == `x`
       end
     }
 

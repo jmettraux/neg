@@ -32,19 +32,24 @@ module Leg
 
   class Parser
 
-    def initialize
+    def self.method_missing(m, *args)
 
-      @root = nil
-      @non_terminals = {}
+      return super if args.any?
+      return super if m.to_s == 'to_ary'
+
+      @root ||= m
+      pa = NonTerminalParser.new(m)
+
+      (class << self; self; end).send(:define_method, m) { pa }
+
+      pa
     end
 
-    def parse(s)
+    def self.parse(s)
 
       i = Leg::Input(s)
 
-      resolve_non_terminals
-
-      result = @non_terminals[@root].parse(i)
+      result = send(@root).parse(i)
 
       if result[1] && ( ! i.eoi?)
         rem = i.read(7)
@@ -52,27 +57,10 @@ module Leg
         raise UnconsumedInputError.new("remaining: #{rem.inspect}")
       end
 
-      result[0] = @root
-
       result
     end
 
-    def self.parse(s)
-
-      self.new.parse(s)
-    end
-
-    protected
-
-    def resolve_non_terminals
-
-      (self.methods - Leg::Parser.instance_methods).each { |m|
-        @root ||= m.to_sym
-        @non_terminals[m.to_sym] = send(m)
-      }
-    end
-
-    def `(s)
+    def self.`(s)
 
       StringParser.new(s)
     end
@@ -101,6 +89,35 @@ module Leg
         success, result = do_parse(input)
 
         [ nil, success, start, result ]
+      end
+    end
+
+    class NonTerminalParser < SubParser
+
+      attr_reader :child
+
+      def initialize(name)
+
+        @name = name
+        @child = nil
+      end
+
+      def ==(pa)
+
+        @child = pa
+      end
+
+      def do_parse(i)
+
+        @child.do_parse(i)
+      end
+
+      def parse(input_or_string)
+
+        r = super(input_or_string)
+        r[0] = @name
+
+        r
       end
     end
 
