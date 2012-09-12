@@ -12,10 +12,10 @@ Gem::Specification.new do |s|
   s.email = [ 'jmettraux@gmail.com' ]
   s.homepage = 'https://github.com/jmettraux/leg'
   s.rubyforge_project = 'ruote'
-  s.summary = 'a leg parser'
+  s.summary = 'a leg larser'
 
   s.description = %{
-jumping on one leg, a leg parser
+jumping on one leg, a leg larser
   }.strip
 
   #s.files = `git ls-files`.split("\n")
