@@ -94,8 +94,6 @@ module Leg
 
     class NonTerminalParser < SubParser
 
-      attr_reader :child
-
       def initialize(name)
 
         @name = name
@@ -119,6 +117,11 @@ module Leg
 
         r
       end
+
+      def to_s
+
+        "#{@name} == #{@child.to_s}"
+      end
     end
 
     class StringParser < SubParser
@@ -138,6 +141,11 @@ module Leg
         else
           [ false, "expected #{@s.inspect}, got #{s.inspect}" ]
         end
+      end
+
+      def to_s
+
+        "`#{@s}`"
       end
     end
 
@@ -170,6 +178,11 @@ module Leg
 
         [ results.last[1], results ]
       end
+
+      def to_s
+
+        "(#{@children.collect(&:to_s).join(' + ')})"
+      end
     end
 
     class AlternativeParser < CompositeParser
@@ -186,6 +199,11 @@ module Leg
         results = @children.collect { |c| c.parse(i) }
 
         [ !!results.find { |r| r[1] }, results ]
+      end
+
+      def to_s
+
+        "(#{@children.collect(&:to_s).join(' | ')})"
       end
     end
   end

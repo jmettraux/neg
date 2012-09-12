@@ -78,6 +78,20 @@ describe Leg::Parser do
     end
   end
 
+  describe 'using parentheses' do
+
+    it 'influences precedence' do
+
+      parser = Class.new(Leg::Parser) do
+        t0 == `x` + `y` | `z`
+        t1 == (`x` | `y`) + `z`
+      end
+
+      parser.t0.to_s.should == 't0 == ((`x` + `y`) | `z`)'
+      parser.t1.to_s.should == 't1 == ((`x` | `y`) + `z`)'
+    end
+  end
+
   describe 'non-terminal' do
 
     let(:parser) {
