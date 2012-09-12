@@ -198,7 +198,7 @@ module Leg
 
         results = @children.collect { |c| c.parse(i) }
 
-        [ !!results.find { |r| r[1] }, results ]
+        [ !! results.find { |r| r[1] }, results ]
       end
 
       def to_s

@@ -11,11 +11,11 @@ Gem::Specification.new do |s|
   s.authors = [ 'John Mettraux' ]
   s.email = [ 'jmettraux@gmail.com' ]
   s.homepage = 'https://github.com/jmettraux/leg'
-  s.rubyforge_project = 'rufus'
+  s.rubyforge_project = 'ruote'
   s.summary = 'a leg parser'
 
   s.description = %{
-jumping on one leg, a leg parser, leg-o, leg-o-helas
+jumping on one leg, a leg parser
   }.strip
 
   #s.files = `git ls-files`.split("\n")
