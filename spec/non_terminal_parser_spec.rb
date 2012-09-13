@@ -31,6 +31,23 @@ describe Leg::Parser::NonTerminalParser do
           [ nil, false, [ 0, 1, 1 ], "expected \"x\", got \"X\"" ],
           [ nil, true, [ 0, 1, 1 ], "X" ] ] ]
     end
+
+    it 'is rendered as x when on the right side' do
+
+      parser = Class.new(Leg::Parser) do
+        word  == car | bus
+        car   == `car`
+        bus   == `bus`
+      end
+
+      parser.to_s.strip.should == %q{
+:
+  bus == `bus`
+  car == `car`
+  word == (car | bus)
+  root: word
+      }.strip
+    end
   end
 
   context '... > "name"' do

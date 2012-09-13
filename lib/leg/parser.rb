@@ -70,13 +70,15 @@ module Leg
       s = [ "#{name}:" ]
 
       methods.sort.each do |mname|
+
         m = method(mname)
+
         next if m.owner == Class
         next unless m.arity == -1
         next unless m.owner.ancestors.include?(Class)
         next unless m.receiver.ancestors.include?(Leg::Parser)
-        pa = self.send(mname)
-        s << "  #{pa.to_s}"
+
+        s << "  #{self.send(mname).to_s}"
       end
 
       s << "  root: #{@root}"
