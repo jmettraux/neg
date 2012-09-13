@@ -163,9 +163,7 @@ module Leg
 
       def do_parse(i)
 
-        s = i.read(@s.length)
-
-        if s == @s
+        if (s = i.read(@s.length)) == @s
           [ true, @s ]
         else
           [ false, "expected #{@s.inspect}, got #{s.inspect}" ]
