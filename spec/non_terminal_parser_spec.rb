@@ -50,7 +50,7 @@ describe Leg::Parser::NonTerminalParser do
     end
   end
 
-  context '... > "name"' do
+  context '...["name"]' do
 
     let(:parser) {
       Class.new(Leg::Parser) do
