@@ -92,22 +92,50 @@ describe Leg::Parser do
     end
   end
 
+  describe 'naming with > "name"' do
+
+    let(:parser) {
+      Class.new(Leg::Parser) do
+        transportation ==
+          (`car` | `bus`)['vehicle'] +
+          `_` +
+          (`cluj` | `split`)['city']
+      end
+    }
+
+    it 'is rendered differently' do
+
+      parser.to_s.strip.should == %q{
+:
+  transportation == ((`car` | `bus`)["vehicle"] + `_` + (`cluj` | `split`)["city"])
+  root: transportation
+      }.strip
+    end
+
+    it 'sets the name in the result' do
+
+      pp parser.parse('car_cluj')
+      parser.parse('car_cluj').should ==
+        :x
+    end
+  end
+
   describe 'non-terminal' do
 
     let(:parser) {
       Class.new(Leg::Parser) do
-        text == x | y
+        text == x | z
         x    == `x`
-        y    == `yy` | `y`
+        z    == `zz` | `z`
       end
     }
 
     it 'parses' do
 
       parser.parse('x')[1].should == true
-      parser.parse('y')[1].should == true
-      parser.parse('yy')[1].should == true
-      parser.parse('z')[1].should == false
+      parser.parse('z')[1].should == true
+      parser.parse('zz')[1].should == true
+      parser.parse('y')[1].should == false
     end
   end
 

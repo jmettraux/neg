@@ -65,6 +65,25 @@ module Leg
       StringParser.new(s)
     end
 
+    def self.to_s
+
+      s = [ "#{name}:" ]
+
+      methods.sort.each do |mname|
+        m = method(mname)
+        next if m.owner == Class
+        next unless m.arity == -1
+        next unless m.owner.ancestors.include?(Class)
+        next unless m.receiver.ancestors.include?(Leg::Parser)
+        pa = self.send(mname)
+        s << "  #{pa.to_s}"
+      end
+
+      s << "  root: #{@root}"
+
+      s.join("\n")
+    end
+
     #--
     # sub parsers
     #++
@@ -81,6 +100,11 @@ module Leg
         AlternativeParser.new(self, pa)
       end
 
+      def [](name)
+
+        NonTerminalParser.new(name.to_s, self)
+      end
+
       def parse(input_or_string)
 
         input = Leg::Input(input_or_string)
@@ -94,10 +118,10 @@ module Leg
 
     class NonTerminalParser < SubParser
 
-      def initialize(name)
+      def initialize(name, child=nil)
 
         @name = name
-        @child = nil
+        @child = child
       end
 
       def ==(pa)
@@ -120,7 +144,11 @@ module Leg
 
       def to_s
 
-        "#{@name} == #{@child.to_s}"
+        if @name.is_a?(Symbol)
+          "#{@name} == #{@child.to_s}"
+        else
+          "#{@child.to_s}[#{@name.inspect}]"
+        end
       end
     end
 
