@@ -51,8 +51,15 @@ describe Leg::Parser do
 
       AltParser.parse('x').should ==
         [ :text, true, [ 0, 1, 1 ], [
-          [ nil, true, [ 0, 1, 1 ], 'x' ],
-          [ nil, false, [ 1, 1, 2 ], 'expected "y", got ""' ] ] ]
+          [ nil, true, [ 0, 1, 1 ], 'x' ] ] ]
+    end
+
+    it 'parses (2nd alternative succeeds)' do
+
+      AltParser.parse('y').should ==
+        [ :text, true, [ 0, 1, 1 ], [
+          [ nil, false, [ 0, 1, 1 ], 'expected "x", got "y"' ],
+          [ nil, true, [ 0, 1, 1 ], 'y' ] ] ]
     end
 
     it 'fails gracefully' do
@@ -103,7 +110,7 @@ describe Leg::Parser do
       end
     }
 
-    it 'is rendered differently' do
+    it 'is rendered as []' do
 
       parser.to_s.strip.should == %q{
 :
@@ -112,30 +119,44 @@ describe Leg::Parser do
       }.strip
     end
 
-    it 'sets the name in the result' do
+    it 'sets the name (as a string) in the result' do
 
-      pp parser.parse('car_cluj')
       parser.parse('car_cluj').should ==
-        :x
+        [ :transportation,
+          true,
+          [ 0, 1, 1],
+          [ [ 'vehicle', true, [ 0, 1, 1 ], [ [ nil, true, [ 0, 1, 1 ], 'car' ] ] ],
+          [ nil, true, [ 3, 1, 4 ], '_'],
+          [ 'city', true, [ 4, 1, 5 ], [ [ nil, true, [ 4, 1, 5 ], 'cluj' ] ] ] ] ]
     end
   end
 
   describe 'non-terminal' do
 
-    let(:parser) {
-      Class.new(Leg::Parser) do
+    it 'parses' do
+
+      parser = Class.new(Leg::Parser) do
         text == x | z
         x    == `x`
         z    == `zz` | `z`
       end
-    }
-
-    it 'parses' do
 
       parser.parse('x')[1].should == true
       parser.parse('z')[1].should == true
       parser.parse('zz')[1].should == true
       parser.parse('y')[1].should == false
+    end
+
+    it 'sets its name in the result (as a Symbol)' do
+
+      parser = Class.new(Leg::Parser) do
+        x == `x` | `X` | `xx`
+      end
+
+      parser.parse('X').should ==
+        [ :x, true, [ 0, 1, 1 ], [
+          [ nil, false, [ 0, 1, 1 ], "expected \"x\", got \"X\"" ],
+          [ nil, true, [ 0, 1, 1 ], "X" ] ] ]
     end
   end
 

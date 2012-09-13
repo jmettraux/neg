@@ -224,9 +224,14 @@ module Leg
 
       def do_parse(i)
 
-        results = @children.collect { |c| c.parse(i) }
+        result = []
 
-        [ !! results.find { |r| r[1] }, results ]
+        @children.each { |c|
+          result << c.parse(i)
+          break if result.last[1]
+        }
+
+        [ result.last[1], result ]
       end
 
       def to_s
