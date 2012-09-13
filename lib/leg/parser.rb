@@ -107,6 +107,11 @@ module Leg
         NonTerminalParser.new(name.to_s, self)
       end
 
+      def ^(range)
+
+        RepetitionParser.new(self, range)
+      end
+
       def parse(input_or_string)
 
         input = Leg::Input(input_or_string)
@@ -155,6 +160,31 @@ module Leg
         else #if @name.is_a?(Symbol)
           "#{@name} == #{@child.to_s(self)}"
         end
+      end
+    end
+
+    class RepetitionParser < SubParser
+
+      def initialize(child, range)
+
+        @min, @max = range.is_a?(Array) ? range : [ range, nil ]
+        @child = child
+      end
+
+      def do_parse(i)
+
+        result = []
+
+        loop do
+          r = @child.parse(i)
+          result << r
+          break unless r[1]
+          break if result.size == @max
+        end
+
+        success = result.last[1] && (result.size >= @min)
+
+        [ success, result ]
       end
     end
 
