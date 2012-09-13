@@ -146,12 +146,14 @@ module Leg
         r
       end
 
-      def to_s
+      def to_s(parent=nil)
 
-        if @name.is_a?(Symbol)
-          "#{@name} == #{@child.to_s}"
-        else
-          "#{@child.to_s}[#{@name.inspect}]"
+        if @name.is_a?(String)
+          "#{@child.to_s(self)}[#{@name.inspect}]"
+        elsif parent
+          @name.to_s
+        else #if @name.is_a?(Symbol)
+          "#{@name} == #{@child.to_s(self)}"
         end
       end
     end
@@ -172,7 +174,7 @@ module Leg
         end
       end
 
-      def to_s
+      def to_s(parent=nil)
 
         "`#{@s}`"
       end
@@ -208,9 +210,9 @@ module Leg
         [ results.last[1], results ]
       end
 
-      def to_s
+      def to_s(parent=nil)
 
-        "(#{@children.collect(&:to_s).join(' + ')})"
+        "(#{@children.collect { |c| c.to_s(self) }.join(' + ')})"
       end
     end
 
@@ -235,9 +237,9 @@ module Leg
         [ result.last[1], result ]
       end
 
-      def to_s
+      def to_s(parent=nil)
 
-        "(#{@children.collect(&:to_s).join(' | ')})"
+        "(#{@children.collect { |c| c.to_s(self) }.join(' | ')})"
       end
     end
   end

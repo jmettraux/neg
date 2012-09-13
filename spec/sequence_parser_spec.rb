@@ -46,10 +46,6 @@ describe Leg::Parser::SequenceParser do
       pool    == `poo` + `l`
     end
 
-    puts "=" * 80
-    puts parser
-    puts "=" * 80
-
     parser.parse('pool').should ==
       [ :word,
         true,
