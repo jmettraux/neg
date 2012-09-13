@@ -40,31 +40,32 @@ module Leg
 
     def read(count)
 
-      @s[@offset, count]
-    end
-
-    def skip(count)
+      s = ''
 
       count.times do
 
+        c = @s[@offset, 1]
+
+        break if c.nil?
+
+        s << c
+
         @offset = @offset + 1
 
-        if @s[@offset, 1] == "\n"
+        if c == "\n"
           @line = @line + 1
           @column = 0
         else
           @column = @column + 1
         end
       end
+
+      s
     end
 
-    def rewind(offset=0)
+    def rewind(pos=[ 0, 1, 1 ])
 
-      @offset = 0
-      @line = 1
-      @column = 1
-
-      skip(offset)
+      @offset, @line, @column = pos
     end
 
     def position

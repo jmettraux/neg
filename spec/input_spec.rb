@@ -16,30 +16,25 @@ describe Leg::Input do
 
   describe '#read' do
 
-    it "reads but doesn't move" do
+    it "reads and moves" do
 
       @input.read(5).should == 'the q'
 
-      @input.position.should == [ 0, 1, 1 ]
-    end
-  end
-
-  describe '#skip' do
-
-    it 'skips (same line)' do
-
-      @input.skip(5)
-
-      @input.read(4).should == 'uick'
       @input.position.should == [ 5, 1, 6 ]
     end
 
-    it 'skips (new line)' do
+    it "reads and moves (same line)" do
 
-      @input.skip(21)
+      @input.read(9).should == 'the quick'
 
-      @input.read(4).should == 'umpe'
-      @input.position.should == [ 21, 2, 3 ]
+      @input.position.should == [ 9, 1, 10 ]
+    end
+
+    it "reads and moves (new line)" do
+
+      @input.read(21).should == "the quick blue fox\n j"
+
+      @input.position.should == [ 21, 2, 2 ]
     end
   end
 
@@ -47,20 +42,18 @@ describe Leg::Input do
 
     it 'rewinds' do
 
-      @input.skip(21)
+      @input.read(21)
       @input.rewind
 
-      @input.read(5).should == 'the q'
       @input.position.should == [ 0, 1, 1 ]
     end
 
-    it 'rewinds with an offset' do
+    it 'rewinds with a [ off, line, col ]' do
 
-      @input.skip(21)
-      @input.rewind(22)
+      @input.read(21)
+      @input.rewind([ 5, 1, 6 ])
 
-      @input.read(4).should == 'mped'
-      @input.position.should == [ 22, 2, 4 ]
+      @input.read(4).should == 'uick'
     end
   end
 
@@ -73,7 +66,7 @@ describe Leg::Input do
 
     it 'returns true if the end of input has been reached' do
 
-      @input.skip(37)
+      @input.read(37)
 
       @input.eoi?.should == true
     end

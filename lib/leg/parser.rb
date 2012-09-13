@@ -112,6 +112,8 @@ module Leg
 
         success, result = do_parse(input)
 
+        input.rewind(start) unless success
+
         [ nil, success, start, result ]
       end
     end
@@ -164,7 +166,6 @@ module Leg
         s = i.read(@s.length)
 
         if s == @s
-          i.skip(@s.length)
           [ true, @s ]
         else
           [ false, "expected #{@s.inspect}, got #{s.inspect}" ]
