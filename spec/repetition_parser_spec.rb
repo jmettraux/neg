@@ -4,6 +4,39 @@ require 'spec_helper'
 
 describe Leg::Parser::RepetitionParser do
 
+  context '`x` ^ 0 (0 or more)' do
+
+    let(:parser) {
+      Class.new(Leg::Parser) do
+        text == `x` ^ 0
+      end
+    }
+
+    it 'parses the empty string' do
+
+      parser.parse('').should ==
+        [:text, true, [0, 1, 1], []]
+    end
+
+    it 'parses' do
+
+      parser.parse('xxx').should ==
+        [ :text, true, [ 0, 1, 1 ], [
+          [ nil, true, [ 0, 1, 1 ], 'x' ],
+          [ nil, true, [ 1, 1, 2 ], 'x' ],
+          [ nil, true, [ 2, 1, 3 ], 'x' ] ] ]
+    end
+
+    it 'fails gracefully' do
+
+      lambda {
+        parser.parse('a')
+      }.should raise_error(
+        Leg::UnconsumedInputError,
+        'remaining: "a"')
+    end
+  end
+
   context '`x` ^ 2 (at least 2)' do
 
     let(:parser) {

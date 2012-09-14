@@ -183,7 +183,7 @@ module Leg
           break if rs.size == @max
         end
 
-        success = rs.last[1] && (rs.size >= @min)
+        success = (rs.empty? || rs.last[1]) && (rs.size >= @min)
 
         [ success, rs ]
       end
