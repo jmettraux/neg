@@ -169,13 +169,14 @@ module Leg
 
       def initialize(child, range)
 
+        @range = range
+        @child = child
+
         @min, @max = case range
           when -1 then [ 0, 1 ]
           when Array then range
           else [ range, nil ]
         end
-
-        @child = child
       end
 
       def do_parse(i)
@@ -193,6 +194,11 @@ module Leg
         success = (rs.empty? || rs.last[1]) && (rs.size >= @min)
 
         [ success, rs ]
+      end
+
+      def to_s(parent=nil)
+
+        "#{@child.to_s(self)} * #{@range.inspect}"
       end
     end
 

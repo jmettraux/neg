@@ -26,6 +26,15 @@ describe Leg::Parser::RepetitionParser do
         Leg::UnconsumedInputError,
         'remaining: "x"')
     end
+
+    it 'is rendered correctly via #to_s' do
+
+      parser.to_s.strip.should == %q{
+:
+  text == `x` * -1
+  root: text
+      }.strip
+    end
   end
 
   context '`x` * 0 (0 or more)' do
@@ -118,6 +127,15 @@ describe Leg::Parser::RepetitionParser do
       lambda {
         parser.parse('xxxx')
       }.should raise_error(Leg::UnconsumedInputError, 'remaining: "x"')
+    end
+
+    it 'is rendered correctly via #to_s' do
+
+      parser.to_s.strip.should == %q{
+:
+  text == `x` * [3, 3]
+  root: text
+      }.strip
     end
   end
 end
