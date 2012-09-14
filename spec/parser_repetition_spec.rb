@@ -4,11 +4,11 @@ require 'spec_helper'
 
 describe Leg::Parser::RepetitionParser do
 
-  context '`x` ^ -1 (maybe)' do
+  context '`x` * -1 (maybe)' do
 
     let(:parser) {
       Class.new(Leg::Parser) do
-        text == `x` ^ -1
+        text == `x` * -1
       end
     }
 
@@ -28,11 +28,11 @@ describe Leg::Parser::RepetitionParser do
     end
   end
 
-  context '`x` ^ 0 (0 or more)' do
+  context '`x` * 0 (0 or more)' do
 
     let(:parser) {
       Class.new(Leg::Parser) do
-        text == `x` ^ 0
+        text == `x` * 0
       end
     }
 
@@ -61,11 +61,11 @@ describe Leg::Parser::RepetitionParser do
     end
   end
 
-  context '`x` ^ 2 (at least 2)' do
+  context '`x` * 2 (at least 2)' do
 
     let(:parser) {
       Class.new(Leg::Parser) do
-        text == `x` ^ 2
+        text == `x` * 2
       end
     }
 
@@ -87,11 +87,11 @@ describe Leg::Parser::RepetitionParser do
     end
   end
 
-  context '`x` ^ [ 3, 3 ] (at least 3, max 3)' do
+  context '`x` * [ 3, 3 ] (at least 3, max 3)' do
 
     let(:parser) {
       Class.new(Leg::Parser) do
-        text == `x` ^ [ 3, 3 ]
+        text == `x` * [ 3, 3 ]
       end
     }
 

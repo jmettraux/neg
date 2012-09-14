@@ -107,7 +107,7 @@ module Leg
         NonTerminalParser.new(name.to_s, self)
       end
 
-      def ^(range)
+      def *(range)
 
         RepetitionParser.new(self, range)
       end
