@@ -153,12 +153,14 @@ module Leg
 
       def to_s(parent=nil)
 
+        child = @child ? @child.to_s(self) : '<missing>'
+
         if @name.is_a?(String)
-          "#{@child.to_s(self)}[#{@name.inspect}]"
+          "#{child}[#{@name.inspect}]"
         elsif parent
           @name.to_s
         else #if @name.is_a?(Symbol)
-          "#{@name} == #{@child.to_s(self)}"
+          "#{@name} == #{child}"
         end
       end
     end
@@ -167,7 +169,12 @@ module Leg
 
       def initialize(child, range)
 
-        @min, @max = range.is_a?(Array) ? range : [ range, nil ]
+        @min, @max = case range
+          when -1 then [ 0, 1 ]
+          when Array then range
+          else [ range, nil ]
+        end
+
         @child = child
       end
 
@@ -177,7 +184,7 @@ module Leg
 
         loop do
           r = @child.parse(i)
-          break if ! r[1] && rs.size >= @min && (@max.nil? || rs.size >= @max)
+          break if ! r[1] && rs.size >= @min && (@max.nil? || rs.size <= @max)
           rs << r
           break if ! r[1]
           break if rs.size == @max
