@@ -173,18 +173,19 @@ module Leg
 
       def do_parse(i)
 
-        result = []
+        rs = []
 
         loop do
           r = @child.parse(i)
-          result << r
-          break unless r[1]
-          break if result.size == @max
+          break if ! r[1] && rs.size >= @min && (@max.nil? || rs.size >= @max)
+          rs << r
+          break if ! r[1]
+          break if rs.size == @max
         end
 
-        success = result.last[1] && (result.size >= @min)
+        success = rs.last[1] && (rs.size >= @min)
 
-        [ success, result ]
+        [ success, rs ]
       end
     end
 
