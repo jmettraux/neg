@@ -15,7 +15,7 @@ describe Leg::Parser::RepetitionParser do
     it 'parses the empty string' do
 
       parser.parse('').should ==
-        [:text, true, [0, 1, 1], []]
+        [ :text, true, [ 0, 1, 1 ], [] ]
     end
 
     it 'fails gracefully' do
@@ -48,7 +48,7 @@ describe Leg::Parser::RepetitionParser do
     it 'parses the empty string' do
 
       parser.parse('').should ==
-        [:text, true, [0, 1, 1], []]
+        [ :text, true, [ 0, 1, 1 ], [] ]
     end
 
     it 'parses' do

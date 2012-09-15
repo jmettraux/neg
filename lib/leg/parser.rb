@@ -65,6 +65,11 @@ module Leg
       StringParser.new(s)
     end
 
+    def self._(c=nil)
+
+      CharacterParser.new(c)
+    end
+
     def self.to_s
 
       s = [ "#{name}:" ]
@@ -74,11 +79,13 @@ module Leg
         m = method(mname)
 
         next if m.owner == Class
-        next unless m.arity == -1
+        next if mname.to_s == '_'
+        next if mname.to_s == 'to_s'
+        next unless m.arity == (RUBY_VERSION > '1.9' ? 0 : -1)
         next unless m.owner.ancestors.include?(Class)
         next unless m.receiver.ancestors.include?(Leg::Parser)
 
-        s << "  #{self.send(mname).to_s}"
+        s << "  #{send(mname).to_s}"
       end
 
       s << "  root: #{@root}"
@@ -221,6 +228,29 @@ module Leg
       def to_s(parent=nil)
 
         "`#{@s}`"
+      end
+    end
+
+    class CharacterParser < SubParser
+
+      def initialize(c)
+
+        @c = c
+        @r = Regexp.new(c ? "[#{c}]" : '.')
+      end
+
+      def do_parse(i)
+
+        if (s = i.read(1)).match(@r)
+          [ true, s ]
+        else
+          [ false, "#{s.inspect} doesn't match #{@c.inspect}" ]
+        end
+      end
+
+      def to_s(parent=nil)
+
+        @c ? "_(#{@c.inspect})" : '_'
       end
     end
 
