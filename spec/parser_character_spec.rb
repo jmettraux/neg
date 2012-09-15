@@ -41,5 +41,32 @@ describe Leg::Parser::CharacterParser do
       }.strip
     end
   end
+
+  context "_('0-9-') (ranges)" do
+
+    let(:parser) {
+      Class.new(Leg::Parser) do
+        text == `tel:` + _('0-9-') * 1
+      end
+    }
+
+    it 'parses "tel:0-99"' do
+
+      parser.parse('tel:0-99').should ==
+        [ :text,
+          true,
+          [ 0, 1, 1 ],
+          [ [ nil, true, [ 0, 1, 1 ], "tel:" ],
+            [ nil,
+              true,
+              [ 4, 1, 5 ],
+              [ [ nil, true, [ 4, 1, 5 ], "0" ],
+                [ nil, true, [ 5, 1, 6 ], "-" ],
+                [ nil, true, [ 6, 1, 7 ], "9" ],
+                [ nil, true, [ 7, 1, 8 ], "9" ] ] ] ] ]
+    end
+
+    it 'fails gracefully'
+  end
 end
 
