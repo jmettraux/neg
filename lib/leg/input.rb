@@ -77,6 +77,13 @@ module Leg
 
       @offset >= @s.length
     end
+
+    def remains
+
+      rem = read(7)
+
+      rem.length >= 7 ? rem = rem + '...' : rem
+    end
   end
 end
 

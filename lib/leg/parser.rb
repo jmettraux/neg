@@ -51,11 +51,9 @@ module Leg
 
       result = send(@root).parse(i)
 
-      if result[1] && ( ! i.eoi?)
-        rem = i.read(7)
-        rem = rem + '...' if rem.length >= 7
-        raise UnconsumedInputError.new("remaining: #{rem.inspect}")
-      end
+      raise UnconsumedInputError.new(
+        "remaining: #{i.remains.inspect}"
+      ) if result[1] && ( ! i.eoi?)
 
       result
     end
