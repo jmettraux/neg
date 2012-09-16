@@ -77,8 +77,7 @@ module Leg
         m = method(mname)
 
         next if m.owner == Class
-        next if mname.to_s == '_'
-        next if mname.to_s == 'to_s'
+        next if %w[ _ to_s ].include?(mname.to_s)
         next unless m.arity == (RUBY_VERSION > '1.9' ? 0 : -1)
         next unless m.owner.ancestors.include?(Class)
         next unless m.receiver.ancestors.include?(Leg::Parser)
