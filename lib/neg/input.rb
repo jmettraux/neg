@@ -23,8 +23,67 @@
 #++
 
 
-module Leg
+module Neg
 
-  VERSION = '0.2.0'
+  def self.Input(o)
+
+    o.is_a?(Input) ? o : Input.new(o)
+  end
+
+  class Input
+
+    def initialize(s)
+
+      @s = s
+      rewind
+    end
+
+    def read(count)
+
+      s = ''
+
+      count.times do
+
+        c = @s[@offset, 1]
+
+        break if c.nil?
+
+        s << c
+
+        @offset = @offset + 1
+
+        if c == "\n"
+          @line = @line + 1
+          @column = 0
+        else
+          @column = @column + 1
+        end
+      end
+
+      s
+    end
+
+    def rewind(pos=[ 0, 1, 1 ])
+
+      @offset, @line, @column = pos
+    end
+
+    def position
+
+      [ @offset, @line, @column ]
+    end
+
+    def eoi?
+
+      @offset >= @s.length
+    end
+
+    def remains
+
+      rem = read(7)
+
+      rem.length >= 7 ? rem = rem + '...' : rem
+    end
+  end
 end
 

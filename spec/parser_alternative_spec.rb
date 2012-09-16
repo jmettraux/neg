@@ -2,9 +2,9 @@
 require 'spec_helper'
 
 
-describe Leg::Parser::AlternativeParser do
+describe Neg::Parser::AlternativeParser do
 
-  class AltParser < Leg::Parser
+  class AltParser < Neg::Parser
     text == `x` | `y`
   end
 
@@ -33,16 +33,16 @@ describe Leg::Parser::AlternativeParser do
 
   it 'goes beyond two elements' do
 
-    parser = Class.new(Leg::Parser) do
+    parser = Class.new(Neg::Parser) do
       text == `x` | `y` | `z`
     end
 
     text = parser.text
 
     text.class.should ==
-      Leg::Parser::NonTerminalParser
+      Neg::Parser::NonTerminalParser
     text.child.children.collect(&:class).should ==
-      [ Leg::Parser::StringParser ] * 3
+      [ Neg::Parser::StringParser ] * 3
   end
 end
 

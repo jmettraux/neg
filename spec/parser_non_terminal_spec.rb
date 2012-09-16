@@ -2,13 +2,13 @@
 require 'spec_helper'
 
 
-describe Leg::Parser::NonTerminalParser do
+describe Neg::Parser::NonTerminalParser do
 
   context 'name == ...' do
 
     it 'parses' do
 
-      parser = Class.new(Leg::Parser) do
+      parser = Class.new(Neg::Parser) do
         text == x | z
         x    == `x`
         z    == `zz` | `z`
@@ -22,7 +22,7 @@ describe Leg::Parser::NonTerminalParser do
 
     it 'sets its name in the result (as a Symbol)' do
 
-      parser = Class.new(Leg::Parser) do
+      parser = Class.new(Neg::Parser) do
         x == `x` | `X` | `xx`
       end
 
@@ -34,7 +34,7 @@ describe Leg::Parser::NonTerminalParser do
 
     it 'is rendered as x when on the right side' do
 
-      parser = Class.new(Leg::Parser) do
+      parser = Class.new(Neg::Parser) do
         word  == car | bus
         car   == `car`
         bus   == `bus`
@@ -53,7 +53,7 @@ describe Leg::Parser::NonTerminalParser do
   context '...["name"]' do
 
     let(:parser) {
-      Class.new(Leg::Parser) do
+      Class.new(Neg::Parser) do
         transportation ==
           (`car` | `bus`)['vehicle'] +
           `_` +

@@ -1,10 +1,10 @@
 
 Gem::Specification.new do |s|
 
-  s.name = 'leg'
+  s.name = 'neg'
 
   s.version = File.read(
-    File.expand_path('../lib/leg/version.rb', __FILE__)
+    File.expand_path('../lib/neg/version.rb', __FILE__)
   ).match(/ VERSION *= *['"]([^'"]+)/)[1]
 
   s.platform = Gem::Platform::RUBY
@@ -12,10 +12,10 @@ Gem::Specification.new do |s|
   s.email = [ 'jmettraux@gmail.com' ]
   s.homepage = 'https://github.com/jmettraux/leg'
   s.rubyforge_project = 'ruote'
-  s.summary = 'a leg larser'
+  s.summary = 'a neg narser'
 
   s.description = %{
-jumping on one leg, a leg larser
+not a peg parser, just a neg narser
   }.strip
 
   #s.files = `git ls-files`.split("\n")

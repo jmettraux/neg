@@ -2,13 +2,13 @@
 require 'spec_helper'
 
 
-describe 'Leg::Parser' do
+describe 'Neg::Parser' do
 
   describe 'using parentheses' do
 
     it 'influences precedence' do
 
-      parser = Class.new(Leg::Parser) do
+      parser = Class.new(Neg::Parser) do
         t0 == `x` + `y` | `z`
         t1 == (`x` | `y`) + `z`
       end
@@ -21,7 +21,7 @@ describe 'Leg::Parser' do
   describe '.parse' do
 
     let(:parser) {
-      Class.new(Leg::Parser) do
+      Class.new(Neg::Parser) do
         text == `x`
       end
     }
@@ -31,7 +31,7 @@ describe 'Leg::Parser' do
       lambda {
         parser.parse('xy')
       }.should raise_error(
-        Leg::UnconsumedInputError,
+        Neg::UnconsumedInputError,
         'remaining: "y"')
     end
 
@@ -40,7 +40,7 @@ describe 'Leg::Parser' do
       lambda {
         parser.parse('xyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy')
       }.should raise_error(
-        Leg::UnconsumedInputError,
+        Neg::UnconsumedInputError,
         'remaining: "yyyyyyy..."')
     end
   end

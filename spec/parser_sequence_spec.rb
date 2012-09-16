@@ -2,9 +2,9 @@
 require 'spec_helper'
 
 
-describe Leg::Parser::SequenceParser do
+describe Neg::Parser::SequenceParser do
 
-  class SeqParser < Leg::Parser
+  class SeqParser < Neg::Parser
     text == `x` + `y`
   end
 
@@ -26,21 +26,21 @@ describe Leg::Parser::SequenceParser do
 
   it 'goes beyond two elements' do
 
-    parser = Class.new(Leg::Parser) do
+    parser = Class.new(Neg::Parser) do
       text == `x` + `y` + `z`
     end
 
     text = parser.text
 
     text.class.should ==
-      Leg::Parser::NonTerminalParser
+      Neg::Parser::NonTerminalParser
     text.child.children.collect(&:class).should ==
-      [ Leg::Parser::StringParser ] * 3
+      [ Neg::Parser::StringParser ] * 3
   end
 
   it 'backtracks correctly' do
 
-    parser = Class.new(Leg::Parser) do
+    parser = Class.new(Neg::Parser) do
       word    == poodle | pool
       poodle  == `poo` + `dle`
       pool    == `poo` + `l`

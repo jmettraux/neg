@@ -2,12 +2,12 @@
 require 'spec_helper'
 
 
-describe Leg::Parser::CharacterParser do
+describe Neg::Parser::CharacterParser do
 
   context '_ (any)' do
 
     let(:parser) {
-      Class.new(Leg::Parser) do
+      Class.new(Neg::Parser) do
         text == `x` + _
       end
     }
@@ -45,7 +45,7 @@ describe Leg::Parser::CharacterParser do
   context "_('0-9-') (ranges)" do
 
     let(:parser) {
-      Class.new(Leg::Parser) do
+      Class.new(Neg::Parser) do
         text == `tel:` + _('0-9-') * 1
       end
     }

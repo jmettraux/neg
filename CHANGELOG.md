@@ -1,8 +1,8 @@
 
-# leg - CHANGELOG.md
+# neg - CHANGELOG.md
 
 
-## leg - 1.0.0    not yet released
+## neg - 1.0.0    not yet released
 
 - initial release
 

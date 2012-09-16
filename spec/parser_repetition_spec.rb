@@ -2,12 +2,12 @@
 require 'spec_helper'
 
 
-describe Leg::Parser::RepetitionParser do
+describe Neg::Parser::RepetitionParser do
 
   context '`x` * -1 (maybe)' do
 
     let(:parser) {
-      Class.new(Leg::Parser) do
+      Class.new(Neg::Parser) do
         text == `x` * -1
       end
     }
@@ -23,7 +23,7 @@ describe Leg::Parser::RepetitionParser do
       lambda {
         parser.parse('xx')
       }.should raise_error(
-        Leg::UnconsumedInputError,
+        Neg::UnconsumedInputError,
         'remaining: "x"')
     end
 
@@ -40,7 +40,7 @@ describe Leg::Parser::RepetitionParser do
   context '`x` * 0 (0 or more)' do
 
     let(:parser) {
-      Class.new(Leg::Parser) do
+      Class.new(Neg::Parser) do
         text == `x` * 0
       end
     }
@@ -65,7 +65,7 @@ describe Leg::Parser::RepetitionParser do
       lambda {
         parser.parse('a')
       }.should raise_error(
-        Leg::UnconsumedInputError,
+        Neg::UnconsumedInputError,
         'remaining: "a"')
     end
   end
@@ -73,7 +73,7 @@ describe Leg::Parser::RepetitionParser do
   context '`x` * 2 (at least 2)' do
 
     let(:parser) {
-      Class.new(Leg::Parser) do
+      Class.new(Neg::Parser) do
         text == `x` * 2
       end
     }
@@ -99,7 +99,7 @@ describe Leg::Parser::RepetitionParser do
   context '`x` * [ 3, 3 ] (at least 3, max 3)' do
 
     let(:parser) {
-      Class.new(Leg::Parser) do
+      Class.new(Neg::Parser) do
         text == `x` * [ 3, 3 ]
       end
     }
@@ -126,7 +126,7 @@ describe Leg::Parser::RepetitionParser do
 
       lambda {
         parser.parse('xxxx')
-      }.should raise_error(Leg::UnconsumedInputError, 'remaining: "x"')
+      }.should raise_error(Neg::UnconsumedInputError, 'remaining: "x"')
     end
 
     it 'is rendered correctly via #to_s' do

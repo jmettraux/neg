@@ -1,20 +1,20 @@
 
 $:.unshift(File.expand_path('../../lib', __FILE__))
 
-require 'leg'
+require 'neg'
 
 
-class Leg::Parser::CompositeParser
+class Neg::Parser::CompositeParser
 
   attr_reader :children
 end
 
-class Leg::Parser::NonTerminalParser
+class Neg::Parser::NonTerminalParser
 
   attr_reader :child
 end
 
 
-RSpec.configure do |config|
-end
+#RSpec.configure do |config|
+#end
 

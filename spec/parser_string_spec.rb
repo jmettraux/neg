@@ -2,13 +2,13 @@
 require 'spec_helper'
 
 
-describe Leg::Parser::StringParser do
+describe Neg::Parser::StringParser do
 
   context 'standalone' do
 
     it 'parses' do
 
-      parser = Leg::Parser::StringParser.new('xxx')
+      parser = Neg::Parser::StringParser.new('xxx')
 
       parser.parse('xxx').should ==
         [ nil, true, [ 0, 1, 1 ], 'xxx' ]
@@ -16,17 +16,17 @@ describe Leg::Parser::StringParser do
 
     it 'fails gracefully' do
 
-      parser = Leg::Parser::StringParser.new('xxx')
+      parser = Neg::Parser::StringParser.new('xxx')
 
       parser.parse('yyy').should ==
         [ nil, false, [ 0, 1, 1 ], 'expected "xxx", got "yyy"' ]
     end
   end
 
-  context 'within Leg::Parser' do
+  context 'within Neg::Parser' do
 
     let(:parser) {
-      Class.new(Leg::Parser) do
+      Class.new(Neg::Parser) do
         root == `x`
       end
     }

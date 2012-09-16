@@ -1,7 +1,7 @@
 
-# leg
+# neg
 
-A leg parser.
+A neg parser.
 
 A silly little exploration project.
 

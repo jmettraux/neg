@@ -22,11 +22,11 @@
 # Made in Japan.
 #++
 
-require 'leg/version'
-require 'leg/input'
+require 'neg/version'
+require 'neg/input'
 
 
-module Leg
+module Neg
 
   class UnconsumedInputError < StandardError; end
 
@@ -47,7 +47,7 @@ module Leg
 
     def self.parse(s)
 
-      i = Leg::Input(s)
+      i = Neg::Input(s)
 
       result = send(@root).parse(i)
 
@@ -80,7 +80,7 @@ module Leg
         next if %w[ _ to_s ].include?(mname.to_s)
         next unless m.arity == (RUBY_VERSION > '1.9' ? 0 : -1)
         next unless m.owner.ancestors.include?(Class)
-        next unless m.receiver.ancestors.include?(Leg::Parser)
+        next unless m.receiver.ancestors.include?(Neg::Parser)
 
         s << "  #{send(mname).to_s}"
       end
@@ -118,7 +118,7 @@ module Leg
 
       def parse(input_or_string)
 
-        input = Leg::Input(input_or_string)
+        input = Neg::Input(input_or_string)
         start = input.position
 
         success, result = do_parse(input)
