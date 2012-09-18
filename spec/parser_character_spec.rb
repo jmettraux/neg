@@ -66,7 +66,18 @@ describe Neg::Parser::CharacterParser do
                 [ nil, true, [ 7, 1, 8 ], "9" ] ] ] ] ]
     end
 
-    it 'fails gracefully'
+    it 'fails gracefully' do
+
+      parser.parse('tel:a-bc').should ==
+        [ :text,
+          false,
+          [ 0, 1, 1 ],
+          [ [ nil, true, [ 0, 1, 1 ], "tel:" ],
+            [ nil,
+              false,
+              [ 4, 1, 5 ],
+              [ [ nil, false, [ 4, 1, 5 ], "\"a\" doesn't match \"0-9-\"" ] ] ] ] ]
+    end
   end
 end
 
