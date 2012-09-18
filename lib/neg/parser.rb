@@ -116,6 +116,16 @@ module Neg
         RepetitionParser.new(self, range)
       end
 
+      def ~
+
+        LookaheadParser.new(self, true)
+      end
+
+      def !
+
+        LookaheadParser.new(self, false)
+      end
+
       def parse(input_or_string)
 
         input = Neg::Input(input_or_string)
@@ -311,6 +321,39 @@ module Neg
       def to_s(parent=nil)
 
         "(#{@children.collect { |c| c.to_s(self) }.join(' | ')})"
+      end
+    end
+
+    class LookaheadParser < SubParser
+
+      def initialize(child, presence)
+
+        @child = child
+        @presence = presence
+      end
+
+      def do_parse(i)
+
+        start = i.position
+
+        r = @child.parse(i)
+        i.rewind(start)
+
+        success = r[1]
+        success = ! success if ! @presence
+
+        msg = [
+          @child.to_s(nil),
+          'is', success ? nil : 'not',
+          @presence ? 'present' : 'absent'
+        ].compact.join(' ')
+
+        [ success, msg ]
+      end
+
+      def to_s(parent=nil)
+
+        "#{@presence ? '~' : '!'}#{@child.to_s(self)}"
       end
     end
   end
