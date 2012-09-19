@@ -79,7 +79,14 @@ describe Neg::Parser::CharacterParser do
               [ [ nil, [ 4, 1, 5 ], false, "\"a\" doesn't match \"0-9-\"" ] ] ] ] ]
     end
 
-    it 'is rendered correctly via #to_s'
+    it 'is rendered correctly via #to_s' do
+
+      parser.to_s.strip.should == %q{
+:
+  text == (`tel:` + _("0-9-") * 1)
+  root: text
+      }.strip
+    end
   end
 end
 
