@@ -32,6 +32,9 @@ module Neg
 
   class Parser
 
+    def self.`(s)      ; StringParser.new(s); end
+    def self._(c=nil)  ; CharacterParser.new(c); end
+
     def self.method_missing(m, *args)
 
       return super if args.any?
@@ -56,16 +59,6 @@ module Neg
       ) if result[2] && ( ! i.eoi?)
 
       result
-    end
-
-    def self.`(s)
-
-      StringParser.new(s)
-    end
-
-    def self._(c=nil)
-
-      CharacterParser.new(c)
     end
 
     def self.to_s
@@ -101,7 +94,7 @@ module Neg
       def [](name)  ; NonTerminalParser.new(name.to_s, self); end
       def *(range)  ; RepetitionParser.new(self, range); end
       def ~         ; LookaheadParser.new(self, true); end
-      def !         ; LookaheadParser.new(self, false); end
+      def -@        ; LookaheadParser.new(self, false); end
 
       def parse(input_or_string)
 
@@ -330,7 +323,7 @@ module Neg
 
       def to_s(parent=nil)
 
-        "#{@presence ? '~' : '!'}#{@child.to_s(self)}"
+        "#{@presence ? '~' : '-'}#{@child.to_s(self)}"
       end
     end
   end
