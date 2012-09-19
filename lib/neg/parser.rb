@@ -101,11 +101,11 @@ module Neg
         input = Neg::Input(input_or_string)
         start = input.position
 
-        success, result = do_parse(input)
+        success, result, children = do_parse(input)
 
         input.rewind(start) unless success
 
-        [ nil, start, success, result ]
+        [ nil, start, success, result, children ]
       end
     end
 
@@ -177,7 +177,7 @@ module Neg
 
         success = (rs.empty? || rs.last[2]) && (rs.size >= @min)
 
-        [ success, rs ]
+        [ success, nil, rs ]
       end
 
       def to_s(parent=nil)
@@ -196,9 +196,9 @@ module Neg
       def do_parse(i)
 
         if (s = i.read(@s.length)) == @s
-          [ true, @s ]
+          [ true, @s, [] ]
         else
-          [ false, "expected #{@s.inspect}, got #{s.inspect}" ]
+          [ false, "expected #{@s.inspect}, got #{s.inspect}", [] ]
         end
       end
 
@@ -219,9 +219,9 @@ module Neg
       def do_parse(i)
 
         if (s = i.read(1)).match(@r)
-          [ true, s ]
+          [ true, s, [] ]
         else
-          [ false, "#{s.inspect} doesn't match #{@c.inspect}" ]
+          [ false, "#{s.inspect} doesn't match #{@c.inspect}", [] ]
         end
       end
 
@@ -258,7 +258,7 @@ module Neg
           break unless results.last[2]
         end
 
-        [ results.last[2], results ]
+        [ results.last[2], nil, results ]
       end
 
       def to_s(parent=nil)
@@ -278,14 +278,14 @@ module Neg
 
       def do_parse(i)
 
-        result = []
+        results = []
 
         @children.each { |c|
-          result << c.parse(i)
-          break if result.last[2]
+          results << c.parse(i)
+          break if results.last[2]
         }
 
-        [ result.last[2], result ]
+        [ results.last[2], nil, results ]
       end
 
       def to_s(parent=nil)
@@ -312,13 +312,15 @@ module Neg
         success = r[2]
         success = ! success if ! @presence
 
-        msg = [
-          @child.to_s(nil),
-          'is', success ? nil : 'not',
-          @presence ? 'present' : 'absent'
-        ].compact.join(' ')
+        result = if success
+          nil
+        else
+          [
+            @child.to_s(nil), 'is not', @presence ? 'present' : 'absent'
+          ].join(' ')
+        end
 
-        [ success, msg ]
+        [ success, result, [ r ] ]
       end
 
       def to_s(parent=nil)

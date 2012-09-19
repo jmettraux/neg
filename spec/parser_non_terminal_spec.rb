@@ -27,9 +27,9 @@ describe Neg::Parser::NonTerminalParser do
       end
 
       parser.parse('X').should ==
-        [ :x, [ 0, 1, 1 ], true, [
-          [ nil, [ 0, 1, 1 ], false, "expected \"x\", got \"X\"" ],
-          [ nil, [ 0, 1, 1 ], true, "X" ] ] ]
+        [ :x, [ 0, 1, 1 ], true, nil, [
+          [ nil, [ 0, 1, 1 ], false, "expected \"x\", got \"X\"", [] ],
+          [ nil, [ 0, 1, 1 ], true, "X", [] ] ] ]
     end
 
     it 'is rendered as x when on the right side' do
@@ -76,11 +76,12 @@ describe Neg::Parser::NonTerminalParser do
         [ :transportation,
           [ 0, 1, 1 ],
           true,
-          [ [ 'vehicle', [ 0, 1, 1 ], true, [
-            [ nil, [ 0, 1, 1 ], true, 'car' ] ] ],
-          [ nil, [ 3, 1, 4 ], true, '_'],
-          [ 'city', [ 4, 1, 5 ], true, [
-            [ nil, [ 4, 1, 5 ], true, 'cluj' ] ] ] ] ]
+          nil,
+          [ [ 'vehicle', [ 0, 1, 1 ], true, nil, [
+            [ nil, [ 0, 1, 1 ], true, 'car', [] ] ] ],
+          [ nil, [ 3, 1, 4 ], true, '_', [] ],
+          [ 'city', [ 4, 1, 5 ], true, nil, [
+            [ nil, [ 4, 1, 5 ], true, 'cluj', [] ] ] ] ] ]
     end
   end
 end

@@ -11,17 +11,17 @@ describe Neg::Parser::SequenceParser do
   it 'parses' do
 
     SeqParser.parse('xy').should ==
-      [ :text, [ 0, 1, 1 ], true, [
-        [ nil, [ 0, 1, 1 ], true, 'x' ],
-        [ nil, [ 1, 1, 2 ], true, 'y' ] ] ]
+      [ :text, [ 0, 1, 1 ], true, nil, [
+        [ nil, [ 0, 1, 1 ], true, 'x', [] ],
+        [ nil, [ 1, 1, 2 ], true, 'y', [] ] ] ]
   end
 
   it 'fails gracefully' do
 
     SeqParser.parse('xx').should ==
-      [ :text, [ 0, 1, 1 ], false, [
-        [ nil, [ 0, 1, 1 ], true, 'x' ],
-        [ nil, [ 1, 1, 2 ], false, 'expected "y", got "x"' ] ] ]
+      [ :text, [ 0, 1, 1 ], false, nil, [
+        [ nil, [ 0, 1, 1 ], true, 'x', [] ],
+        [ nil, [ 1, 1, 2 ], false, 'expected "y", got "x"', [] ] ] ]
   end
 
   it 'goes beyond two elements' do
@@ -50,16 +50,19 @@ describe Neg::Parser::SequenceParser do
       [ :word,
         [ 0, 1, 1 ],
         true,
+        nil,
         [ [ :poodle,
             [ 0, 1, 1 ],
             false,
-            [ [ nil, [ 0, 1, 1 ], true, "poo" ],
-              [ nil, [ 3, 1, 4 ], false, "expected \"dle\", got \"l\"" ] ] ],
+            nil,
+            [ [ nil, [ 0, 1, 1 ], true, "poo", [] ],
+              [ nil, [ 3, 1, 4 ], false, "expected \"dle\", got \"l\"", [] ] ] ],
           [ :pool,
-            [ 0, 1, 1],
+            [ 0, 1, 1 ],
             true,
-            [ [ nil, [ 0, 1, 1 ], true, "poo" ],
-              [ nil, [ 3, 1, 4 ], true, "l" ] ] ] ] ]
+            nil,
+            [ [ nil, [ 0, 1, 1 ], true, "poo", [] ],
+              [ nil, [ 3, 1, 4 ], true, "l", [] ] ] ] ] ]
   end
 end
 
