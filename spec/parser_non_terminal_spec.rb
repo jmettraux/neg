@@ -14,10 +14,10 @@ describe Neg::Parser::NonTerminalParser do
         z    == `zz` | `z`
       end
 
-      parser.parse('x')[1].should == true
-      parser.parse('z')[1].should == true
-      parser.parse('zz')[1].should == true
-      parser.parse('y')[1].should == false
+      parser.parse('x')[2].should == true
+      parser.parse('z')[2].should == true
+      parser.parse('zz')[2].should == true
+      parser.parse('y')[2].should == false
     end
 
     it 'sets its name in the result (as a Symbol)' do
@@ -27,9 +27,9 @@ describe Neg::Parser::NonTerminalParser do
       end
 
       parser.parse('X').should ==
-        [ :x, true, [ 0, 1, 1 ], [
-          [ nil, false, [ 0, 1, 1 ], "expected \"x\", got \"X\"" ],
-          [ nil, true, [ 0, 1, 1 ], "X" ] ] ]
+        [ :x, [ 0, 1, 1 ], true, [
+          [ nil, [ 0, 1, 1 ], false, "expected \"x\", got \"X\"" ],
+          [ nil, [ 0, 1, 1 ], true, "X" ] ] ]
     end
 
     it 'is rendered as x when on the right side' do
@@ -74,11 +74,13 @@ describe Neg::Parser::NonTerminalParser do
 
       parser.parse('car_cluj').should ==
         [ :transportation,
+          [ 0, 1, 1 ],
           true,
-          [ 0, 1, 1],
-          [ [ 'vehicle', true, [ 0, 1, 1 ], [ [ nil, true, [ 0, 1, 1 ], 'car' ] ] ],
-          [ nil, true, [ 3, 1, 4 ], '_'],
-          [ 'city', true, [ 4, 1, 5 ], [ [ nil, true, [ 4, 1, 5 ], 'cluj' ] ] ] ] ]
+          [ [ 'vehicle', [ 0, 1, 1 ], true, [
+            [ nil, [ 0, 1, 1 ], true, 'car' ] ] ],
+          [ nil, [ 3, 1, 4 ], true, '_'],
+          [ 'city', [ 4, 1, 5 ], true, [
+            [ nil, [ 4, 1, 5 ], true, 'cluj' ] ] ] ] ]
     end
   end
 end

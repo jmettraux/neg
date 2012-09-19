@@ -16,20 +16,20 @@ describe Neg::Parser::CharacterParser do
 
       parser.parse('xy').should ==
         [ :text,
-          true,
           [ 0, 1, 1 ],
-          [ [ nil, true, [ 0, 1, 1 ], "x" ],
-            [ nil, true, [ 1, 1, 2 ], "y" ] ] ]
+          true,
+          [ [ nil, [ 0, 1, 1 ], true, "x" ],
+            [ nil, [ 1, 1, 2 ], true, "y" ] ] ]
     end
 
     it 'fails gracefully' do
 
       parser.parse('x').should ==
         [ :text,
-          false,
           [ 0, 1, 1],
-          [ [ nil, true, [ 0, 1, 1 ], "x" ],
-            [ nil, false, [ 1, 1, 2 ], "\"\" doesn't match nil" ] ] ]
+          false,
+          [ [ nil, [ 0, 1, 1 ], true, "x" ],
+            [ nil, [ 1, 1, 2 ], false, "\"\" doesn't match nil" ] ] ]
     end
 
     it 'is rendered correctly via #to_s' do
@@ -54,30 +54,32 @@ describe Neg::Parser::CharacterParser do
 
       parser.parse('tel:0-99').should ==
         [ :text,
-          true,
           [ 0, 1, 1 ],
-          [ [ nil, true, [ 0, 1, 1 ], "tel:" ],
+          true,
+          [ [ nil, [ 0, 1, 1 ], true, "tel:" ],
             [ nil,
-              true,
               [ 4, 1, 5 ],
-              [ [ nil, true, [ 4, 1, 5 ], "0" ],
-                [ nil, true, [ 5, 1, 6 ], "-" ],
-                [ nil, true, [ 6, 1, 7 ], "9" ],
-                [ nil, true, [ 7, 1, 8 ], "9" ] ] ] ] ]
+              true,
+              [ [ nil, [ 4, 1, 5 ], true, "0" ],
+                [ nil, [ 5, 1, 6 ], true, "-" ],
+                [ nil, [ 6, 1, 7 ], true, "9" ],
+                [ nil, [ 7, 1, 8 ], true, "9" ] ] ] ] ]
     end
 
     it 'fails gracefully' do
 
       parser.parse('tel:a-bc').should ==
         [ :text,
-          false,
           [ 0, 1, 1 ],
-          [ [ nil, true, [ 0, 1, 1 ], "tel:" ],
+          false,
+          [ [ nil, [ 0, 1, 1 ], true, "tel:" ],
             [ nil,
-              false,
               [ 4, 1, 5 ],
-              [ [ nil, false, [ 4, 1, 5 ], "\"a\" doesn't match \"0-9-\"" ] ] ] ] ]
+              false,
+              [ [ nil, [ 4, 1, 5 ], false, "\"a\" doesn't match \"0-9-\"" ] ] ] ] ]
     end
+
+    it 'is rendered correctly via #to_s'
   end
 end
 

@@ -11,24 +11,24 @@ describe Neg::Parser::AlternativeParser do
   it 'parses' do
 
     AltParser.parse('x').should ==
-      [ :text, true, [ 0, 1, 1 ], [
-        [ nil, true, [ 0, 1, 1 ], 'x' ] ] ]
+      [ :text, [ 0, 1, 1 ], true, [
+        [ nil, [ 0, 1, 1 ], true, 'x' ] ] ]
   end
 
   it 'parses (2nd alternative succeeds)' do
 
     AltParser.parse('y').should ==
-      [ :text, true, [ 0, 1, 1 ], [
-        [ nil, false, [ 0, 1, 1 ], 'expected "x", got "y"' ],
-        [ nil, true, [ 0, 1, 1 ], 'y' ] ] ]
+      [ :text, [ 0, 1, 1 ], true, [
+        [ nil, [ 0, 1, 1 ], false, 'expected "x", got "y"' ],
+        [ nil, [ 0, 1, 1 ], true, 'y' ] ] ]
   end
 
   it 'fails gracefully' do
 
     AltParser.parse('z').should ==
-      [ :text, false, [ 0, 1, 1 ], [
-        [ nil, false, [ 0, 1, 1 ], 'expected "x", got "z"' ],
-        [ nil, false, [ 0, 1, 1 ], 'expected "y", got "z"' ] ] ]
+      [ :text, [ 0, 1, 1 ], false, [
+        [ nil, [ 0, 1, 1 ], false, 'expected "x", got "z"' ],
+        [ nil, [ 0, 1, 1 ], false, 'expected "y", got "z"' ] ] ]
   end
 
   it 'goes beyond two elements' do

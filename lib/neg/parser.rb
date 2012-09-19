@@ -53,7 +53,7 @@ module Neg
 
       raise UnconsumedInputError.new(
         "remaining: #{i.remains.inspect}"
-      ) if result[1] && ( ! i.eoi?)
+      ) if result[2] && ( ! i.eoi?)
 
       result
     end
@@ -135,7 +135,7 @@ module Neg
 
         input.rewind(start) unless success
 
-        [ nil, success, start, result ]
+        [ nil, start, success, result ]
       end
     end
 
@@ -199,13 +199,13 @@ module Neg
 
         loop do
           r = @child.parse(i)
-          break if ! r[1] && rs.size >= @min && (@max.nil? || rs.size <= @max)
+          break if ! r[2] && rs.size >= @min && (@max.nil? || rs.size <= @max)
           rs << r
-          break if ! r[1]
+          break if ! r[2]
           break if rs.size == @max
         end
 
-        success = (rs.empty? || rs.last[1]) && (rs.size >= @min)
+        success = (rs.empty? || rs.last[2]) && (rs.size >= @min)
 
         [ success, rs ]
       end
@@ -285,10 +285,10 @@ module Neg
         @children.each do |c|
 
           results << c.parse(i)
-          break unless results.last[1]
+          break unless results.last[2]
         end
 
-        [ results.last[1], results ]
+        [ results.last[2], results ]
       end
 
       def to_s(parent=nil)
@@ -312,10 +312,10 @@ module Neg
 
         @children.each { |c|
           result << c.parse(i)
-          break if result.last[1]
+          break if result.last[2]
         }
 
-        [ result.last[1], result ]
+        [ result.last[2], result ]
       end
 
       def to_s(parent=nil)
@@ -339,7 +339,7 @@ module Neg
         r = @child.parse(i)
         i.rewind(start)
 
-        success = r[1]
+        success = r[2]
         success = ! success if ! @presence
 
         msg = [

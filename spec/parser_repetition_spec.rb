@@ -15,7 +15,7 @@ describe Neg::Parser::RepetitionParser do
     it 'parses the empty string' do
 
       parser.parse('').should ==
-        [ :text, true, [ 0, 1, 1 ], [] ]
+        [ :text, [ 0, 1, 1 ], true, [] ]
     end
 
     it 'fails gracefully' do
@@ -48,16 +48,16 @@ describe Neg::Parser::RepetitionParser do
     it 'parses the empty string' do
 
       parser.parse('').should ==
-        [ :text, true, [ 0, 1, 1 ], [] ]
+        [ :text, [ 0, 1, 1 ], true, [] ]
     end
 
     it 'parses' do
 
       parser.parse('xxx').should ==
-        [ :text, true, [ 0, 1, 1 ], [
-          [ nil, true, [ 0, 1, 1 ], 'x' ],
-          [ nil, true, [ 1, 1, 2 ], 'x' ],
-          [ nil, true, [ 2, 1, 3 ], 'x' ] ] ]
+        [ :text, [ 0, 1, 1 ], true, [
+          [ nil, [ 0, 1, 1 ], true, 'x' ],
+          [ nil, [ 1, 1, 2 ], true, 'x' ],
+          [ nil, [ 2, 1, 3 ], true, 'x' ] ] ]
     end
 
     it 'fails gracefully' do
@@ -81,18 +81,18 @@ describe Neg::Parser::RepetitionParser do
     it 'parses' do
 
       parser.parse('xxx').should ==
-        [ :text, true, [ 0, 1, 1 ], [
-          [ nil, true, [ 0, 1, 1 ], 'x' ],
-          [ nil, true, [ 1, 1, 2 ], 'x' ],
-          [ nil, true, [ 2, 1, 3 ], 'x' ] ] ]
+        [ :text, [ 0, 1, 1 ], true, [
+          [ nil, [ 0, 1, 1 ], true, 'x' ],
+          [ nil, [ 1, 1, 2 ], true, 'x' ],
+          [ nil, [ 2, 1, 3 ], true, 'x' ] ] ]
     end
 
     it 'fails gracefully' do
 
       parser.parse('x').should ==
-        [ :text, false, [ 0, 1, 1 ], [
-          [ nil, true, [ 0, 1, 1 ], 'x' ],
-          [ nil, false, [ 1, 1, 2 ], 'expected "x", got ""' ] ] ]
+        [ :text, [ 0, 1, 1 ], false, [
+          [ nil, [ 0, 1, 1 ], true, 'x' ],
+          [ nil, [ 1, 1, 2 ], false, 'expected "x", got ""' ] ] ]
     end
   end
 
@@ -107,19 +107,19 @@ describe Neg::Parser::RepetitionParser do
     it 'parses' do
 
       parser.parse('xxx').should ==
-        [ :text, true, [ 0, 1, 1 ], [
-          [ nil, true, [ 0, 1, 1 ], 'x' ],
-          [ nil, true, [ 1, 1, 2 ], 'x' ],
-          [ nil, true, [ 2, 1, 3 ], 'x' ] ] ]
+        [ :text, [ 0, 1, 1 ], true, [
+          [ nil, [ 0, 1, 1 ], true, 'x' ],
+          [ nil, [ 1, 1, 2 ], true, 'x' ],
+          [ nil, [ 2, 1, 3 ], true, 'x' ] ] ]
     end
 
     it 'fails gracefully' do
 
       parser.parse('xx').should ==
-        [ :text, false, [ 0, 1, 1 ], [
-          [ nil, true, [ 0, 1, 1 ], 'x' ],
-          [ nil, true, [ 1, 1, 2 ], 'x' ],
-          [ nil, false, [ 2, 1, 3 ], 'expected "x", got ""' ] ] ]
+        [ :text, [ 0, 1, 1 ], false, [
+          [ nil, [ 0, 1, 1 ], true, 'x' ],
+          [ nil, [ 1, 1, 2 ], true, 'x' ],
+          [ nil, [ 2, 1, 3 ], false, 'expected "x", got ""' ] ] ]
     end
 
     it 'fails gracefully (unconsumed input)' do

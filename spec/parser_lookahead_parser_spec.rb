@@ -18,27 +18,27 @@ describe Neg::Parser::LookaheadParser do
 
       parser.parse('xy').should ==
         [ :root,
-          true,
           [ 0, 1, 1 ],
+          true,
           [ [ :x,
-              true,
               [ 0, 1, 1 ],
-              [ [ nil, true, [ 0, 1, 1 ], "x" ],
-                [ nil, true, [ 1, 1, 2 ], "`y` is present" ] ] ],
-            [ :y, true, [ 1, 1, 2 ], "y" ] ] ]
+              true,
+              [ [ nil, [ 0, 1, 1 ], true, "x" ],
+                [ nil, [ 1, 1, 2 ], true, "`y` is present" ] ] ],
+            [ :y, [ 1, 1, 2 ], true, "y" ] ] ]
     end
 
     it 'fails gracefully' do
 
       parser.parse('xx').should ==
         [ :root,
-          false,
           [ 0, 1, 1 ],
+          false,
           [ [ :x,
-              false,
               [ 0, 1, 1 ],
-              [ [ nil, true, [ 0, 1, 1 ], "x" ],
-                [ nil, false, [ 1, 1, 2 ], "`y` is not present" ] ] ] ] ]
+              false,
+              [ [ nil, [ 0, 1, 1 ], true, "x" ],
+                [ nil, [ 1, 1, 2 ], false, "`y` is not present" ] ] ] ] ]
     end
 
     it 'is rendered correctly via #to_s' do
@@ -67,27 +67,27 @@ describe Neg::Parser::LookaheadParser do
 
       parser.parse('xz').should ==
         [ :root,
-          true,
           [ 0, 1, 1 ],
+          true,
           [ [ :x,
-              true,
               [ 0, 1, 1 ],
-              [ [ nil, true, [ 0, 1, 1 ], "x" ],
-                [ nil, true, [ 1, 1, 2 ], "`y` is absent" ] ] ],
-            [ :z, true, [ 1, 1, 2 ], "z" ] ] ]
+              true,
+              [ [ nil, [ 0, 1, 1 ], true, "x" ],
+                [ nil, [ 1, 1, 2 ], true, "`y` is absent" ] ] ],
+            [ :z, [ 1, 1, 2 ], true, "z" ] ] ]
     end
 
     it 'fails gracefully' do
 
       parser.parse('xy').should ==
         [ :root,
-          false,
           [ 0, 1, 1 ],
+          false,
           [ [ :x,
-              false,
               [ 0, 1, 1],
-              [ [ nil, true, [ 0, 1, 1 ], "x" ],
-                [ nil, false, [ 1, 1, 2 ], "`y` is not absent" ] ] ] ] ]
+              false,
+              [ [ nil, [ 0, 1, 1 ], true, "x" ],
+                [ nil, [ 1, 1, 2 ], false, "`y` is not absent" ] ] ] ] ]
     end
 
     it 'is rendered correctly via #to_s' do
