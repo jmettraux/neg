@@ -96,35 +96,12 @@ module Neg
 
     class SubParser
 
-      def +(pa)
-
-        SequenceParser.new(self, pa)
-      end
-
-      def |(pa)
-
-        AlternativeParser.new(self, pa)
-      end
-
-      def [](name)
-
-        NonTerminalParser.new(name.to_s, self)
-      end
-
-      def *(range)
-
-        RepetitionParser.new(self, range)
-      end
-
-      def ~
-
-        LookaheadParser.new(self, true)
-      end
-
-      def !
-
-        LookaheadParser.new(self, false)
-      end
+      def +(pa)     ; SequenceParser.new(self, pa); end
+      def |(pa)     ; AlternativeParser.new(self, pa); end
+      def [](name)  ; NonTerminalParser.new(name.to_s, self); end
+      def *(range)  ; RepetitionParser.new(self, range); end
+      def ~         ; LookaheadParser.new(self, true); end
+      def !         ; LookaheadParser.new(self, false); end
 
       def parse(input_or_string)
 
