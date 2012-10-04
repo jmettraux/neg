@@ -6,9 +6,6 @@ describe 'sample JSON parser' do
 
   class JsonParser < Neg::Parser
 
-    #rule(:spaces) { match('\s').repeat(1) }
-    #rule(:spaces?) { spaces.maybe }
-
     #rule(:comma) { spaces? >> str(',') >> spaces? }
     #rule(:digit) { match('[0-9]') }
 
@@ -48,7 +45,10 @@ describe 'sample JSON parser' do
 
     json == spaces? + value + spaces?
 
-    value == string | number | object | array | btrue | bfalse | null
+    spaces? == _(" \t") * 0
+
+    #value == string | number | object | array | btrue | bfalse | null
+    value == btrue | bfalse | null
 
     btrue == `true`
     bfalse == `false`
@@ -84,7 +84,19 @@ describe 'sample JSON parser' do
 
   it 'parses "false"' do
 
-    p JsonParser.parse("false")
+    JsonParser.parse("false").should ==
+      [:json,
+       [0, 1, 1],
+       true,
+       nil,
+       [[:spaces?, [0, 1, 1], true, nil, []],
+        [:value,
+         [0, 1, 1],
+         true,
+         nil,
+         [[:btrue, [0, 1, 1], false, "expected \"true\", got \"fals\"", []],
+          [:bfalse, [0, 1, 1], true, "false", []]]],
+        [:spaces?, [5, 1, 6], true, nil, []]]]
   end
 end
 
