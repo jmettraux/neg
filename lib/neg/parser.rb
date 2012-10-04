@@ -29,6 +29,7 @@ require 'neg/input'
 module Neg
 
   class UnconsumedInputError < StandardError; end
+  class ParseError < StandardError; end
 
   class Parser
 
@@ -123,6 +124,8 @@ module Neg
       end
 
       def do_parse(i)
+
+        raise ParseError.new("\"#{@name}\" is missing") if @child.nil?
 
         @child.do_parse(i)
       end
