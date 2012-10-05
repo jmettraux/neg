@@ -30,37 +30,6 @@ describe 'sample JSON parser' do
 
     #rule(:attribute) { (entry | value).as(:attribute) }
 
-    json == spaces? + value + spaces?
-
-    spaces? == _(" \t") * 0
-
-    #value == string | number | object | array | btrue | bfalse | null
-    value == number | btrue | bfalse | null
-
-    digit == _("0-9")
-    #rule(:number) {
-    #  (
-    #    str('-').maybe >> (
-    #      str('0') | (match('[1-9]') >> digit.repeat)
-    #    ) >> (
-    #      str('.') >> digit.repeat(1)
-    #    ).maybe >> (
-    #      match('[eE]') >> (str('+') | str('-')).maybe >> digit.repeat(1)
-    #    ).maybe
-    #  ).as(:number)
-    #}
-    number ==
-      `-` * 0 +
-      (`0` | (_("1-9") + digit * 0)) +
-      (`.` + digit * 1) * -1 +
-      (_("eE") + _("+-") * -1 + digit * 1) * -1
-
-    btrue == `true`
-    bfalse == `false`
-    null == `null`
-
-    # TODO: continue here with "string"
-
     #rule(:string) {
     #  str('"') >> (
     #    #str('\\') >> any | str('"').absent? >> any
@@ -69,15 +38,24 @@ describe 'sample JSON parser' do
     #  ).repeat.as(:string) >> str('"')
     #}
 
-    #rule(:value) {
-    #  string | number |
-    #  object | array |
-    #  str('true').as(:true) | str('false').as(:false) |
-    #  str('null').as(:null)
-    #}
+    json == spaces? + value + spaces?
 
-    #rule(:top) { spaces? >> value >> spaces? }
-    #root(:top)
+    spaces? == _(" \t") * 0
+
+    #value == string | number | object | array | btrue | bfalse | null
+    value == number | btrue | bfalse | null
+
+    digit == _("0-9")
+
+    number ==
+      `-` * -1 +
+      (`0` | (_("1-9") + digit * 0)) +
+      (`.` + digit * 1) * -1 +
+      (_("eE") + _("+-") * -1 + digit * 1) * -1
+
+    btrue == `true`
+    bfalse == `false`
+    null == `null`
   end
 
   it 'flips burgers' do
