@@ -7,19 +7,6 @@ describe 'sample JSON parser' do
   class JsonParser < Neg::Parser
 
     #rule(:comma) { spaces? >> str(',') >> spaces? }
-    #rule(:digit) { match('[0-9]') }
-
-    #rule(:number) {
-    #  (
-    #    str('-').maybe >> (
-    #      str('0') | (match('[1-9]') >> digit.repeat)
-    #    ) >> (
-    #      str('.') >> digit.repeat(1)
-    #    ).maybe >> (
-    #      match('[eE]') >> (str('+') | str('-')).maybe >> digit.repeat(1)
-    #    ).maybe
-    #  ).as(:number)
-    #}
 
     #rule(:array) {
     #  str('[') >> spaces? >>
@@ -48,7 +35,25 @@ describe 'sample JSON parser' do
     spaces? == _(" \t") * 0
 
     #value == string | number | object | array | btrue | bfalse | null
-    value == btrue | bfalse | null
+    value == number | btrue | bfalse | null
+
+    digit == _("0-9")
+    #rule(:number) {
+    #  (
+    #    str('-').maybe >> (
+    #      str('0') | (match('[1-9]') >> digit.repeat)
+    #    ) >> (
+    #      str('.') >> digit.repeat(1)
+    #    ).maybe >> (
+    #      match('[eE]') >> (str('+') | str('-')).maybe >> digit.repeat(1)
+    #    ).maybe
+    #  ).as(:number)
+    #}
+    number ==
+      `-` * 0 +
+      (`0` | (_("1-9") + digit * 0)) +
+      (`.` + digit * 1) * -1 +
+      (_("eE") + _("+-") * -1 + digit * 1) * -1
 
     btrue == `true`
     bfalse == `false`
@@ -84,19 +89,12 @@ describe 'sample JSON parser' do
 
   it 'parses "false"' do
 
-    JsonParser.parse("false").should ==
-      [:json,
-       [0, 1, 1],
-       true,
-       nil,
-       [[:spaces?, [0, 1, 1], true, nil, []],
-        [:value,
-         [0, 1, 1],
-         true,
-         nil,
-         [[:btrue, [0, 1, 1], false, "expected \"true\", got \"fals\"", []],
-          [:bfalse, [0, 1, 1], true, "false", []]]],
-        [:spaces?, [5, 1, 6], true, nil, []]]]
+    JsonParser.parse("false")[2].should == true
+  end
+
+  it 'parses "-12"' do
+
+    JsonParser.parse("-12")[2].should == true
   end
 end
 
