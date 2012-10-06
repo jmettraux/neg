@@ -67,11 +67,19 @@ describe 'sample JSON parser' do
 
   it 'parses "false"' do
 
+    pp JsonParser.parse("false")
     JsonParser.parse("false")[2].should == true
+  end
+
+  it 'parses "13"' do
+
+    pp JsonParser.parse("13")
+    JsonParser.parse("13")[2].should == true
   end
 
   it 'parses "-12"' do
 
+    pp JsonParser.parse("-12")
     JsonParser.parse("-12")[2].should == true
   end
 end

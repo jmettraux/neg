@@ -123,11 +123,34 @@ module Neg
         @child = pa
       end
 
+#      def reduce(children_results)
+#
+#        children_results.collect { |cr|
+#          if cr[0] && cr[0] != :digit
+#            false
+#          elsif cr[2]
+#            cr[3] ? cr[3] : reduce(cr[4])
+#          else
+#            nil
+#          end
+#        }.flatten.compact
+#      end
+
       def do_parse(i)
 
         raise ParseError.new("\"#{@name}\" is missing") if @child.nil?
 
-        @child.do_parse(i)
+        r = @child.do_parse(i)
+
+        return r
+
+#        return r if r[0] == false
+#
+#        report = reduce(r[2])
+#
+#        return r if report.include?(false)
+#
+#        [ true, report.join, [] ]
       end
 
       def parse(input_or_string)

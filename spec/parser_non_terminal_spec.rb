@@ -48,6 +48,16 @@ describe Neg::Parser::NonTerminalParser do
   root: word
       }.strip
     end
+
+    it 'flips burgers' do
+
+      parser = Class.new(Neg::Parser) do
+        sentence == (word + ` `) * 1
+        word  == _("a-z") * 1
+      end
+
+      pp parser.parse("ab cd ")
+    end
   end
 
   context '...["name"]' do
