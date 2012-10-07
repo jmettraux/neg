@@ -149,7 +149,7 @@ module Neg
 
         return r if report.include?(false)
 
-        [ true, report.join, opts[:noreduce]? r[2] : [] ]
+        [ true, report.join, opts[:noreduce] ? r[2] : [] ]
       end
 
       def parse(input_or_string, opts)
@@ -338,7 +338,7 @@ module Neg
         success = ! success if ! @presence
 
         result = if success
-          nil
+          '' # for NonTerminal#reduce not to continue
         else
           [
             @child.to_s(nil), 'is not', @presence ? 'present' : 'absent'

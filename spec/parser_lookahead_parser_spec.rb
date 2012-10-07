@@ -37,7 +37,7 @@ describe Neg::Parser::LookaheadParser do
               true,
               'x',
               [ [ nil, [ 0, 1, 1 ], true, 'x', [] ],
-                [ nil, [ 1, 1, 2 ], true, nil, [
+                [ nil, [ 1, 1, 2 ], true, '', [
                   [ nil, [ 1, 1, 2 ], true, 'z', [] ] ] ] ] ],
             [ :z, [ 1, 1, 2 ], true, 'z', [] ] ] ]
     end
