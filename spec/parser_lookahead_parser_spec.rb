@@ -21,14 +21,25 @@ describe Neg::Parser::LookaheadParser do
           [ 0, 1, 1 ],
           true,
           nil,
+          [ [ :x, [ 0, 1, 1 ], true, 'x', [] ],
+            [ :z, [ 1, 1, 2 ], true, 'z', [] ] ] ]
+    end
+
+    it 'parses (:noreduce => true)' do
+
+      parser.parse('xz', :noreduce => true).should ==
+        [ :root,
+          [ 0, 1, 1 ],
+          true,
+          nil,
           [ [ :x,
               [ 0, 1, 1 ],
               true,
-              nil,
-              [ [ nil, [ 0, 1, 1 ], true, "x", [] ],
+              'x',
+              [ [ nil, [ 0, 1, 1 ], true, 'x', [] ],
                 [ nil, [ 1, 1, 2 ], true, nil, [
-                  [ nil, [ 1, 1, 2 ], true, "z", [] ] ] ] ] ],
-            [ :z, [ 1, 1, 2 ], true, "z", [] ] ] ]
+                  [ nil, [ 1, 1, 2 ], true, 'z', [] ] ] ] ] ],
+            [ :z, [ 1, 1, 2 ], true, 'z', [] ] ] ]
     end
 
     it 'fails gracefully' do
@@ -79,17 +90,8 @@ describe Neg::Parser::LookaheadParser do
           [ 0, 1, 1 ],
           true,
           nil,
-          [ [ :x,
-              [ 0, 1, 1 ],
-              true,
-              nil,
-              [ [ nil, [ 0, 1, 1 ], true, "x", [] ],
-                [ nil,
-                  [ 1, 1, 2 ],
-                  true,
-                  nil,
-                  [ [ nil, [ 1, 1, 2 ], false, "expected \"y\", got \"z\"", [] ] ] ] ] ],
-            [ :z, [ 1, 1, 2 ], true, "z", [] ] ] ]
+          [ [ :x, [ 0, 1, 1 ], true, 'x', [] ],
+            [ :z, [ 1, 1, 2 ], true, 'z', [] ] ] ]
     end
 
     it 'fails gracefully' do

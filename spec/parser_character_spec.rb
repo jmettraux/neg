@@ -15,12 +15,7 @@ describe Neg::Parser::CharacterParser do
     it 'parses "xy"' do
 
       parser.parse('xy').should ==
-        [ :text,
-          [ 0, 1, 1 ],
-          true,
-          nil,
-          [ [ nil, [ 0, 1, 1 ], true, "x", [] ],
-            [ nil, [ 1, 1, 2 ], true, "y", [] ] ] ]
+        [ :text, [ 0, 1, 1 ], true, 'xy', [] ]
     end
 
     it 'fails gracefully' do
@@ -55,19 +50,7 @@ describe Neg::Parser::CharacterParser do
     it 'parses "tel:0-99"' do
 
       parser.parse('tel:0-99').should ==
-        [ :text,
-          [ 0, 1, 1 ],
-          true,
-          nil,
-          [ [ nil, [ 0, 1, 1 ], true, "tel:", [] ],
-            [ nil,
-              [ 4, 1, 5 ],
-              true,
-              nil,
-              [ [ nil, [ 4, 1, 5 ], true, "0", [] ],
-                [ nil, [ 5, 1, 6 ], true, "-", [] ],
-                [ nil, [ 6, 1, 7 ], true, "9", [] ],
-                [ nil, [ 7, 1, 8 ], true, "9", [] ] ] ] ] ]
+        [ :text, [ 0, 1, 1 ], true, 'tel:0-99', [] ]
     end
 
     it 'fails gracefully' do

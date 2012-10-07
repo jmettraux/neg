@@ -15,7 +15,7 @@ describe Neg::Parser::RepetitionParser do
     it 'parses the empty string' do
 
       parser.parse('').should ==
-        [ :text, [ 0, 1, 1 ], true, nil, [] ]
+        [ :text, [ 0, 1, 1 ], true, '', [] ]
     end
 
     it 'fails gracefully' do
@@ -48,16 +48,13 @@ describe Neg::Parser::RepetitionParser do
     it 'parses the empty string' do
 
       parser.parse('').should ==
-        [ :text, [ 0, 1, 1 ], true, nil, [] ]
+        [ :text, [ 0, 1, 1 ], true, '', [] ]
     end
 
     it 'parses' do
 
       parser.parse('xxx').should ==
-        [ :text, [ 0, 1, 1 ], true, nil, [
-          [ nil, [ 0, 1, 1 ], true, 'x', [] ],
-          [ nil, [ 1, 1, 2 ], true, 'x', [] ],
-          [ nil, [ 2, 1, 3 ], true, 'x', [] ] ] ]
+        [ :text, [ 0, 1, 1 ], true, 'xxx', [] ]
     end
 
     it 'fails gracefully' do
@@ -81,10 +78,7 @@ describe Neg::Parser::RepetitionParser do
     it 'parses' do
 
       parser.parse('xxx').should ==
-        [ :text, [ 0, 1, 1 ], true, nil, [
-          [ nil, [ 0, 1, 1 ], true, 'x', [] ],
-          [ nil, [ 1, 1, 2 ], true, 'x', [] ],
-          [ nil, [ 2, 1, 3 ], true, 'x', [] ] ] ]
+        [ :text, [ 0, 1, 1 ], true, 'xxx', [] ]
     end
 
     it 'fails gracefully' do
@@ -107,10 +101,7 @@ describe Neg::Parser::RepetitionParser do
     it 'parses' do
 
       parser.parse('xxx').should ==
-        [ :text, [ 0, 1, 1 ], true, nil, [
-          [ nil, [ 0, 1, 1 ], true, 'x', [] ],
-          [ nil, [ 1, 1, 2 ], true, 'x', [] ],
-          [ nil, [ 2, 1, 3 ], true, 'x', [] ] ] ]
+        [ :text, [ 0, 1, 1 ], true, 'xxx', [] ]
     end
 
     it 'fails gracefully' do

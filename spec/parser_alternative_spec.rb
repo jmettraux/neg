@@ -11,14 +11,19 @@ describe Neg::Parser::AlternativeParser do
   it 'parses' do
 
     AltParser.parse('x').should ==
-      [ :text, [ 0, 1, 1 ], true, nil, [
-        [ nil, [ 0, 1, 1 ], true, 'x', [] ] ] ]
+      [ :text, [ 0, 1, 1 ], true, 'x', [] ]
   end
 
   it 'parses (2nd alternative succeeds)' do
 
     AltParser.parse('y').should ==
-      [ :text, [ 0, 1, 1 ], true, nil, [
+      [ :text, [ 0, 1, 1 ], true, 'y', [] ]
+  end
+
+  it 'parses (2nd alternative succeeds) :noreduce => true' do
+
+    AltParser.parse('y', :noreduce => true).should ==
+      [ :text, [ 0, 1, 1 ], true, 'y', [
         [ nil, [ 0, 1, 1 ], false, 'expected "x", got "y"', [] ],
         [ nil, [ 0, 1, 1 ], true, 'y', [] ] ] ]
   end

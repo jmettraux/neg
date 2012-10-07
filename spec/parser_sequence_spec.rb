@@ -11,9 +11,7 @@ describe Neg::Parser::SequenceParser do
   it 'parses' do
 
     SeqParser.parse('xy').should ==
-      [ :text, [ 0, 1, 1 ], true, nil, [
-        [ nil, [ 0, 1, 1 ], true, 'x', [] ],
-        [ nil, [ 1, 1, 2 ], true, 'y', [] ] ] ]
+      [ :text, [ 0, 1, 1 ], true, 'xy', [] ]
   end
 
   it 'fails gracefully' do
@@ -60,9 +58,8 @@ describe Neg::Parser::SequenceParser do
           [ :pool,
             [ 0, 1, 1 ],
             true,
-            nil,
-            [ [ nil, [ 0, 1, 1 ], true, "poo", [] ],
-              [ nil, [ 3, 1, 4 ], true, "l", [] ] ] ] ] ]
+            "pool",
+            [] ] ] ]
   end
 end
 

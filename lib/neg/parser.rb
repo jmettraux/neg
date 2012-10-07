@@ -123,18 +123,18 @@ module Neg
         @child = pa
       end
 
-#      def reduce(children_results)
-#
-#        children_results.collect { |cr|
-#          if cr[0] && cr[0] != :digit
-#            false
-#          elsif cr[2]
-#            cr[3] ? cr[3] : reduce(cr[4])
-#          else
-#            nil
-#          end
-#        }.flatten.compact
-#      end
+      def reduce(children_results)
+
+        children_results.collect { |cr|
+          if cr[0]
+            false
+          elsif cr[2]
+            cr[3] ? cr[3] : reduce(cr[4])
+          else
+            nil
+          end
+        }.flatten.compact
+      end
 
       def do_parse(i, opts)
 
@@ -142,15 +142,14 @@ module Neg
 
         r = @child.do_parse(i, opts)
 
-        return r
+        return r if r[0] == false
+        return r if r[1].is_a?(String)
 
-#        return r if r[0] == false
-#
-#        report = reduce(r[2])
-#
-#        return r if report.include?(false)
-#
-#        [ true, report.join, [] ]
+        report = reduce(r[2])
+
+        return r if report.include?(false)
+
+        [ true, report.join, opts[:noreduce]? r[2] : [] ]
       end
 
       def parse(input_or_string, opts)
