@@ -49,17 +49,7 @@ describe Neg::Parser::SequenceParser do
         [ 0, 1, 1 ],
         true,
         nil,
-        [ [ :poodle,
-            [ 0, 1, 1 ],
-            false,
-            nil,
-            [ [ nil, [ 0, 1, 1 ], true, "poo", [] ],
-              [ nil, [ 3, 1, 4 ], false, "expected \"dle\", got \"l\"", [] ] ] ],
-          [ :pool,
-            [ 0, 1, 1 ],
-            true,
-            "pool",
-            [] ] ] ]
+        [ [ :pool, [ 0, 1, 1 ], true, "pool", [] ] ] ]
   end
 end
 

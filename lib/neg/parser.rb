@@ -310,6 +310,8 @@ module Neg
           break if results.last[2]
         }
 
+        results = results[-1, 1] if results.last[2] && ! opts[:noreduce]
+
         [ results.last[2], nil, results ]
       end
 

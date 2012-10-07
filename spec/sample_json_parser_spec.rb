@@ -58,17 +58,17 @@ describe 'sample JSON parser' do
     null == `null`
   end
 
-  it 'flips burgers' do
-
-    puts '-' * 80
-    puts JsonParser
-    puts '-' * 80
-  end
-
   it 'parses "false"' do
 
-    pp JsonParser.parse("false")
-    #JsonParser.parse("false").should == :x
+    JsonParser.parse("false").should ==
+      [ :json,
+        [ 0, 1, 1 ],
+        true,
+        nil,
+        [ [ :spaces?, [ 0, 1, 1 ], true, '', [] ],
+          [ :value, [ 0, 1, 1 ], true, nil, [
+            [ :bfalse, [ 0, 1, 1 ], true, 'false', [] ] ] ],
+          [ :spaces?, [ 5, 1, 6 ], true, '', [] ] ] ]
   end
 
   it 'parses "13"' do
