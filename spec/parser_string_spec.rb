@@ -10,7 +10,7 @@ describe Neg::Parser::StringParser do
 
       parser = Neg::Parser::StringParser.new('xxx')
 
-      parser.parse('xxx').should ==
+      parser.parse('xxx', {}).should ==
         [ nil, [ 0, 1, 1 ], true, 'xxx', [] ]
     end
 
@@ -18,7 +18,7 @@ describe Neg::Parser::StringParser do
 
       parser = Neg::Parser::StringParser.new('xxx')
 
-      parser.parse('yyy').should ==
+      parser.parse('yyy', {}).should ==
         [ nil, [ 0, 1, 1 ], false, 'expected "xxx", got "yyy"', [] ]
     end
   end
@@ -33,7 +33,7 @@ describe Neg::Parser::StringParser do
 
     it 'parses an exact string' do
 
-      parser.parse('x').should ==
+      parser.parse('x', {}).should ==
         [ :root, [ 0, 1, 1 ], true, 'x', [] ]
     end
   end

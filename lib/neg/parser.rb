@@ -49,11 +49,11 @@ module Neg
       pa
     end
 
-    def self.parse(s)
+    def self.parse(s, opts={})
 
       i = Neg::Input(s)
 
-      result = send(@root).parse(i)
+      result = send(@root).parse(i, opts)
 
       raise UnconsumedInputError.new(
         "remaining: #{i.remains.inspect}"
@@ -97,12 +97,12 @@ module Neg
       def ~         ; LookaheadParser.new(self, true); end
       def -@        ; LookaheadParser.new(self, false); end
 
-      def parse(input_or_string)
+      def parse(input_or_string, opts)
 
         input = Neg::Input(input_or_string)
         start = input.position
 
-        success, result, children = do_parse(input)
+        success, result, children = do_parse(input, opts)
 
         input.rewind(start) unless success
 
@@ -136,11 +136,11 @@ module Neg
 #        }.flatten.compact
 #      end
 
-      def do_parse(i)
+      def do_parse(i, opts)
 
         raise ParseError.new("\"#{@name}\" is missing") if @child.nil?
 
-        r = @child.do_parse(i)
+        r = @child.do_parse(i, opts)
 
         return r
 
@@ -153,9 +153,9 @@ module Neg
 #        [ true, report.join, [] ]
       end
 
-      def parse(input_or_string)
+      def parse(input_or_string, opts)
 
-        r = super(input_or_string)
+        r = super
         r[0] = @name
 
         r
@@ -189,12 +189,12 @@ module Neg
         end
       end
 
-      def do_parse(i)
+      def do_parse(i, opts)
 
         rs = []
 
         loop do
-          r = @child.parse(i)
+          r = @child.parse(i, opts)
           break if ! r[2] && rs.size >= @min && (@max.nil? || rs.size <= @max)
           rs << r
           break if ! r[2]
@@ -219,7 +219,7 @@ module Neg
         @s = s
       end
 
-      def do_parse(i)
+      def do_parse(i, opts)
 
         if (s = i.read(@s.length)) == @s
           [ true, @s, [] ]
@@ -242,7 +242,7 @@ module Neg
         @r = Regexp.new(c ? "[#{c}]" : '.')
       end
 
-      def do_parse(i)
+      def do_parse(i, opts)
 
         if (s = i.read(1)).match(@r)
           [ true, s, [] ]
@@ -274,13 +274,13 @@ module Neg
         self
       end
 
-      def do_parse(i)
+      def do_parse(i, opts)
 
         results = []
 
         @children.each do |c|
 
-          results << c.parse(i)
+          results << c.parse(i, opts)
           break unless results.last[2]
         end
 
@@ -302,12 +302,12 @@ module Neg
         self
       end
 
-      def do_parse(i)
+      def do_parse(i, opts)
 
         results = []
 
         @children.each { |c|
-          results << c.parse(i)
+          results << c.parse(i, opts)
           break if results.last[2]
         }
 
@@ -328,11 +328,11 @@ module Neg
         @presence = presence
       end
 
-      def do_parse(i)
+      def do_parse(i, opts)
 
         start = i.position
 
-        r = @child.parse(i)
+        r = @child.parse(i, opts)
         i.rewind(start)
 
         success = r[2]
