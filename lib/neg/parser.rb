@@ -126,7 +126,7 @@ module Neg
       def reduce(children_results)
 
         children_results.collect { |cr|
-          if cr[0]
+          if cr[0] && cr[0].to_s.match(/^_/).nil?
             false
           elsif cr[2]
             cr[3] ? cr[3] : reduce(cr[4])

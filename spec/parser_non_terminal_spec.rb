@@ -47,14 +47,15 @@ describe Neg::Parser::NonTerminalParser do
       }.strip
     end
 
-    it 'flips burgers' do
+    it 'does not bind if the name starts with _' do
 
       parser = Class.new(Neg::Parser) do
-        sentence == (word + ` `) * 1
-        word  == _("a-z") * 1
+        sentence == (_word + ` `) * 1
+        _word  == _("a-z") * 1
       end
 
-      pp parser.parse("ab cd ")
+      parser.parse("ab cd ").should ==
+        [ :sentence, [ 0, 1, 1 ], true, 'ab cd ', [] ]
     end
   end
 
