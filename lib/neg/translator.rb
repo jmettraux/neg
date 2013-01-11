@@ -56,10 +56,12 @@ module Neg
         @results = results
       end
 
-      def result
+      def position;  @parse_tree[1]; end
+      def offset;    @parse_tree[1][0]; end
+      def line;      @parse_tree[1][1]; end
+      def column;    @parse_tree[1][2]; end
 
-        @parse_tree[3]
-      end
+      def result;    @parse_tree[3]; end
     end
   end
 end

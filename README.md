@@ -30,7 +30,8 @@ Here is the classical arithmetic example:
 
     expression  == operation
 
-    operation   == value + ((`+` | `-` | `*` | `/`) + value) * 0
+    operator    == `+` | `-` | `*` | `/`
+    operation   == value + (operator + value) * 0
     value       == parenthese | number
     parenthese  == `(` + expression + `)`
     number      == `-` * -1 + _('0-9') * 1

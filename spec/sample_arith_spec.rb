@@ -8,7 +8,8 @@ describe 'sample math parser' do
 
     expression  == operation
 
-    operation   == value + ((`+` | `-` | `*` | `/`) + value) * 0
+    operator    == `+` | `-` | `*` | `/`
+    operation   == value + (operator + value) * 0
     value       == parenthese | number
     parenthese  == `(` + expression + `)`
     number      == `-` * -1 + _('0-9') * 1
@@ -16,14 +17,22 @@ describe 'sample math parser' do
 
   class ArithTranslator < Neg::Translator
 
-    on :number do |n| n.result.to_i; end
-    on :value do |n| n.results.first; end
-    #on :parenthese do |n| p [ :par, n ]; nil; end
-    #on :operation do |n| p [ :op, n ]; nil; end
+    on(:number) { |n|
+      n.result.to_i
+    }
+    on(:value) { |n|
+      n.results.first
+    }
+    on(:operator) { |n|
+      n.result
+    }
+    on(:parenthese) { |n|
+      n.results[1]
+    }
 
-    on :expression do |n|
-      n.results.last.empty? ? n.results.first : n.results
-    end
+    on(:expression) { |n|
+      n.results.last.empty? ? n.results.first : n.results.flatten(2)
+    }
   end
 
   def parse(s, opts={})
@@ -73,6 +82,17 @@ describe 'sample math parser' do
   it 'translates numbers' do
 
     translate("0").should == 0
+    translate("101").should == 101
+  end
+
+  it 'translates parentheses' do
+
+    translate("(12)").should == 12
+  end
+
+  it 'translates operations' do
+
+    translate("1+2+3").should == [ 1, '+', 2, '+', 3 ]
   end
 end
 
