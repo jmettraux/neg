@@ -22,7 +22,6 @@
 # Made in Japan.
 #++
 
-require 'neg/version'
 require 'neg/input'
 
 

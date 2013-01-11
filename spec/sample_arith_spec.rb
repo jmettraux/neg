@@ -14,6 +14,18 @@ describe 'sample math parser' do
     number      == `-` * -1 + _('0-9') * 1
   end
 
+  class ArithTranslator < Neg::Translator
+
+    on :number do |n| n.result.to_i; end
+    on :value do |n| n.results.first; end
+    #on :parenthese do |n| p [ :par, n ]; nil; end
+    #on :operation do |n| p [ :op, n ]; nil; end
+
+    on :expression do |n|
+      n.results.last.empty? ? n.results.first : n.results
+    end
+  end
+
   def parse(s, opts={})
 
     r = ArithParser.parse(s, opts)
@@ -24,6 +36,11 @@ describe 'sample math parser' do
     end
 
     r[2]
+  end
+
+  def translate(s)
+
+    ArithTranslator.translate(ArithParser.parse(s))
   end
 
   it 'parses numbers' do
@@ -53,10 +70,9 @@ describe 'sample math parser' do
     parse("12+(34-(56/78))").should == true
   end
 
-  it 'flips burgers' do
+  it 'translates numbers' do
 
-    parse("1+1").should == true
-    #parse("1+1", :noreduce => true).should == true
+    translate("0").should == 0
   end
 end
 
