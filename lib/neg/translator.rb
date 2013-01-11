@@ -35,6 +35,7 @@ module Neg
     def self.translate(parse_tree)
 
       results = parse_tree[4].collect { |node| translate(node) }
+      results = results.reject { |e| e == [] }
 
       apply(parse_tree, results)
     end

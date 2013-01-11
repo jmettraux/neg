@@ -26,12 +26,10 @@ describe 'sample math parser' do
     on(:operator) { |n|
       n.result
     }
-    on(:parenthese) { |n|
-      n.results[1]
-    }
 
     on(:expression) { |n|
-      n.results.last.empty? ? n.results.first : n.results.flatten(2)
+      results = n.results.flatten(2)
+      results.size == 1 ? results.first : results
     }
   end
 
