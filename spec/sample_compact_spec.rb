@@ -32,10 +32,19 @@ describe 'sample compact arith parser' do
 
   it 'parses and translates' do
 
-    CompactArithParser.parse("0").should == 0
-    CompactArithParser.parse("101").should == 101
-    CompactArithParser.parse("(12)").should == 12
-    CompactArithParser.parse("1+2+3").should == [ 1, '+', 2, '+', 3 ]
+    CompactArithParser.parse('0').should == 0
+    CompactArithParser.parse('101').should == 101
+    CompactArithParser.parse('(12)').should == 12
+    CompactArithParser.parse('1+2+3').should == [ 1, '+', 2, '+', 3 ]
+  end
+
+  it 'does not translate if :translate => false' do
+
+    CompactArithParser.parse('0', :translate => false).should ==
+      [ :expression, [ 0, 1, 1 ], true, nil, [
+        [ :value, [ 0, 1, 1 ], true, nil, [
+          [ :number, [ 0, 1, 1 ], true, "0", [] ] ] ],
+        [ nil, [ 1, 1, 2 ], true, nil, [] ] ] ]
   end
 end
 

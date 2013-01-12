@@ -70,7 +70,11 @@ module Neg
         "remaining: #{i.remains.inspect}"
       ) if result[2] && ( ! i.eoi?)
 
-      @translator ? @translator.translate(result) : result
+      if @translator && opts[:translate] != false
+        @translator.translate(result)
+      else
+        result
+      end
     end
 
     def self.to_s
