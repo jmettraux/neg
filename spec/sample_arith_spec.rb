@@ -17,15 +17,9 @@ describe 'sample math parser' do
 
   class ArithTranslator < Neg::Translator
 
-    on(:number) { |n|
-      n.result.to_i
-    }
-    on(:value) { |n|
-      n.results.first
-    }
-    on(:operator) { |n|
-      n.result
-    }
+    on(:number)    { |n| n.result.to_i }
+    on(:operator)  { |n| n.result }
+    on(:value)     { |n| n.results.first }
 
     on(:expression) { |n|
       results = n.results.flatten(2)

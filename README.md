@@ -86,9 +86,45 @@ Here is the classical arithmetic example:
 ```
 
 
-## parse output
+## parser output
 
 TODO
+
+
+## parser + translator
+
+It's OK to stuff the translator inside of the parser:
+
+```ruby
+class CompactArithParser < Neg::Parser
+
+  parser do
+
+    expression  == operation
+
+    operator    == `+` | `-` | `*` | `/`
+    operation   == value + (operator + value) * 0
+    value       == parenthese | number
+    parenthese  == `(` + expression + `)`
+    number      == `-` * -1 + _('0-9') * 1
+  end
+
+  translator do
+
+    on(:number)    { |n| n.result.to_i }
+    on(:operator)  { |n| n.result }
+    on(:value)     { |n| n.results.first }
+
+    on(:expression) { |n|
+      results = n.results.flatten(2)
+      results.size == 1 ? results.first : results
+    }
+  end
+end
+
+CompactArithParser.parse("1+2+3")
+  # => [ 1, '+', 2, '+', 3 ]
+```
 
 
 ## presentations

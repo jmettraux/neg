@@ -23,6 +23,7 @@
 #++
 
 require 'neg/input'
+require 'neg/translator'
 
 
 module Neg
@@ -34,6 +35,17 @@ module Neg
 
     def self.`(s)      ; StringParser.new(s); end
     def self._(c=nil)  ; CharacterParser.new(c); end
+
+    def self.parser(&block)
+
+      self.instance_eval(&block)
+    end
+
+    def self.translator(&block)
+
+      @translator = Class.new(Neg::Translator)
+      @translator.instance_eval(&block)
+    end
 
     def self.method_missing(m, *args)
 
@@ -58,7 +70,7 @@ module Neg
         "remaining: #{i.remains.inspect}"
       ) if result[2] && ( ! i.eoi?)
 
-      result
+      @translator ? @translator.translate(result) : result
     end
 
     def self.to_s
@@ -70,7 +82,7 @@ module Neg
         m = method(mname)
 
         next if m.owner == Class
-        next if %w[ _ to_s ].include?(mname.to_s)
+        next if %w[ _ to_s parser translator ].include?(mname.to_s)
         next unless m.arity == (RUBY_VERSION > '1.9' ? 0 : -1)
         next unless m.owner.ancestors.include?(Class)
         next unless m.receiver.ancestors.include?(Neg::Parser)
