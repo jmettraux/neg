@@ -34,15 +34,17 @@ module Neg
 
     def self.translate(parse_tree)
 
-      results = parse_tree[4].collect { |node| translate(node) }
-      results = results.reject { |e| e == [] }
+      results =
+        parse_tree[4].each_with_object([]) { |node, a|
+          catch(nil) { a << translate(node) }
+        }
 
       apply(parse_tree, results)
     end
 
     def self.apply(parse_tree, results)
 
-      rule = @rules[parse_tree[0]]
+      rule = (@rules || {})[parse_tree[0]]
 
       rule ? rule.call(Node.new(parse_tree, results)) : results
     end
