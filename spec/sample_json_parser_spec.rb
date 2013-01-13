@@ -58,11 +58,19 @@ describe 'sample JSON parser' do
 
     translator do
 
+      on(nil) { |n|
+        throw nil if n.results.empty?
+        n.results
+      }
+
       on(:json) { |n| n.results.first }
       on(:value) { |n| n.results.first }
-      on(:spaces?) { |n| throw nil }
+      on(:spaces?) { throw nil }
 
-      on(:array) { |n| n.results.flatten }
+      on(:array) { |n|
+        f2 = n.results.flatten(2)
+        f2.any? ? [ f2.shift ] + f2.flatten(2) : []
+      }
 
       on(:btrue) { true }
       on(:bfalse) { false }
@@ -138,6 +146,12 @@ describe 'sample JSON parser' do
   it 'translates "[ 1, 2, -3 ]"' do
 
     JsonParser.parse("[ 1, 2, -3 ]").should == [ 1, 2, -3 ]
+  end
+
+  it 'translates "[ 1, [ true, 2, false ], -3 ]"' do
+
+    JsonParser.parse("[ 1, [ true, 2, false ], -3 ]").should ==
+      [ 1, [ true, 2, false ], -3 ]
   end
 end
 
