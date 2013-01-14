@@ -29,7 +29,12 @@ module Neg
 
     def self.on(node_name, &block)
 
-      (@rules ||= {})[node_name] = block
+      @rules ||=
+        { nil => lambda { |n| n.results.empty? ? throw(nil) : n.results } }
+          #
+          # the default rule for anonymous nodes...
+
+      @rules[node_name] = block
     end
 
     def self.translate(parse_tree)

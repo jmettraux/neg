@@ -58,11 +58,6 @@ describe 'sample JSON parser' do
 
     translator do
 
-      on(nil) { |n|
-        throw nil if n.results.empty?
-        n.results
-      }
-
       on(:json) { |n| n.results.first }
       on(:value) { |n| n.results.first }
       on(:spaces?) { throw nil }
