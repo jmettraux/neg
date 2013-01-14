@@ -22,16 +22,6 @@ describe 'sample JSON parser' do
     #  ).as(:entry)
     #}
 
-    #rule(:attribute) { (entry | value).as(:attribute) }
-
-    #rule(:string) {
-    #  str('"') >> (
-    #    #str('\\') >> any | str('"').absent? >> any
-    #    #(str('\\') | str('"').absent?) >> any
-    #    (str('\\') >> any | match('[^"]')
-    #  ).repeat.as(:string) >> str('"')
-    #}
-
     parser do
 
       json == spaces? + value + spaces?
@@ -39,9 +29,11 @@ describe 'sample JSON parser' do
       spaces? == _(" \t") * 0
 
       #value == string | number | object | array | btrue | bfalse | null
-      value == array | number | btrue | bfalse | null
+      value == array | string | number | btrue | bfalse | null
 
       array == `[` + (json + (`,` + json) * 0) * 0 + `]`
+
+      string == `"` + ((`\\` + _) | _('^"')) * 0 + `"`
 
       _digit == _("0-9")
 
@@ -67,9 +59,11 @@ describe 'sample JSON parser' do
         f2.any? ? [ f2.shift ] + f2.flatten(2) : []
       }
 
+      on(:string) { |n| eval(n.result) }
+      on(:number) { |n| n.result.to_i }
+
       on(:btrue) { true }
       on(:bfalse) { false }
-      on(:number) { |n| n.result.to_i }
       on(:null) { nil }
     end
   end
@@ -147,6 +141,21 @@ describe 'sample JSON parser' do
 
     JsonParser.parse("[ 1, [ true, 2, false ], -3 ]").should ==
       [ 1, [ true, 2, false ], -3 ]
+  end
+
+  it 'translates "" (empty string)' do
+
+    JsonParser.parse('""').should == ''
+  end
+
+  it 'translates "a bc"' do
+
+    JsonParser.parse('"a bc"').should == 'a bc'
+  end
+
+  it 'translates "a \"nada\" bc"' do
+
+    JsonParser.parse('"a \"nada\" bc"').should == 'a "nada" bc'
   end
 end
 
