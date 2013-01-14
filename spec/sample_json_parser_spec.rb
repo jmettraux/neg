@@ -6,30 +6,16 @@ describe 'sample JSON parser' do
 
   class JsonParser < Neg::Parser
 
-    #rule(:comma) { spaces? >> str(',') >> spaces? }
-
-    #rule(:object) {
-    #  str('{') >> spaces? >>
-    #  (entry >> (comma >> entry).repeat).maybe.as(:object) >>
-    #  spaces? >> str('}')
-    #}
-
-    #rule(:entry) {
-    #  (
-    #     string.as(:key) >> spaces? >>
-    #     str(':') >> spaces? >>
-    #     value.as(:val)
-    #  ).as(:entry)
-    #}
-
     parser do
 
       json == spaces? + value + spaces?
 
       spaces? == _(" \t") * 0
 
-      #value == string | number | object | array | btrue | bfalse | null
-      value == array | string | number | btrue | bfalse | null
+      value == object | array | string | number | btrue | bfalse | null
+
+      object == `{` + (entry + (`,` + entry) * 0) * 0 + `}`
+      entry == spaces? + string + spaces? + `:` + json
 
       array == `[` + (json + (`,` + json) * 0) * 0 + `]`
 
@@ -54,6 +40,10 @@ describe 'sample JSON parser' do
       on(:value) { |n| n.results.first }
       on(:spaces?) { throw nil }
 
+      on(:object) { |n|
+        f2 = n.results.flatten(2)
+        Hash[f2.any? ? [ f2.shift ] + f2.flatten(2) : []]
+      }
       on(:array) { |n|
         f2 = n.results.flatten(2)
         f2.any? ? [ f2.shift ] + f2.flatten(2) : []
@@ -156,6 +146,22 @@ describe 'sample JSON parser' do
   it 'translates "a \"nada\" bc"' do
 
     JsonParser.parse('"a \"nada\" bc"').should == 'a "nada" bc'
+  end
+
+  it 'translates {} (empty object)' do
+
+    JsonParser.parse('{}').should == {}
+  end
+
+  it 'translates { "a": 1, "b": "B" }' do
+
+    JsonParser.parse('{ "a": 1, "b": "B" }').should == { 'a' => 1, 'b' => 'B' }
+  end
+
+  it 'translates { "a": [ 1, 2, "trois" ] }' do
+
+    JsonParser.parse('{ "a": [ 1, 2, "trois" ] }').should ==
+      { 'a' => [ 1, 2, 'trois' ] }
   end
 end
 

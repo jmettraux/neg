@@ -71,7 +71,12 @@ module Neg
       ) if result[2] && ( ! i.eoi?)
 
       if @translator && opts[:translate] != false
-        @translator.translate(result)
+        if result[2]
+          @translator.translate(result)
+        else
+          # TODO: raise some error
+          result
+        end
       else
         result
       end
