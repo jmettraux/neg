@@ -50,7 +50,10 @@ describe 'sample JSON parser' do
       }
 
       on(:string) { |n| eval(n.result) }
-      on(:number) { |n| n.result.to_i }
+
+      on(:number) { |n|
+        n.result.match(/[\.eE]/) ? n.result.to_f : n.result.to_i
+      }
 
       on(:btrue) { true }
       on(:bfalse) { false }
@@ -110,6 +113,21 @@ describe 'sample JSON parser' do
   it 'translates "-12"' do
 
     JsonParser.parse("-12").should == -12
+  end
+
+  it 'translates "-1.2"' do
+
+    JsonParser.parse("-1.2").should == -1.2
+  end
+
+  it 'translates "-1.2e8"' do
+
+    JsonParser.parse("-1.2e8").should == -120000000.0
+  end
+
+  it 'translates "-1e8"' do
+
+    JsonParser.parse("-1e8").should == -100000000.0
   end
 
   it 'translates "null"' do
