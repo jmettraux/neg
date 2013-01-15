@@ -181,5 +181,12 @@ describe 'sample JSON parser' do
     JsonParser.parse('{ "a": [ 1, 2, "trois" ] }').should ==
       { 'a' => [ 1, 2, 'trois' ] }
   end
+
+  it 'raises a ParseError on incorrect input' do
+
+    lambda do
+      JsonParser.parse("x")
+    end.should raise_error(Neg::ParseError, 'expected "{", got "x"')
+  end
 end
 

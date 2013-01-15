@@ -23,13 +23,11 @@
 #++
 
 require 'neg/input'
+require 'neg/errors'
 require 'neg/translator'
 
 
 module Neg
-
-  class UnconsumedInputError < StandardError; end
-  class ParseError < StandardError; end
 
   class Parser
 
@@ -74,8 +72,7 @@ module Neg
         if result[2]
           @translator.translate(result)
         else
-          # TODO: raise some error
-          result
+          raise ParseError.new(result)
         end
       else
         result
@@ -162,7 +159,7 @@ module Neg
 
       def do_parse(i, opts)
 
-        raise ParseError.new("\"#{@name}\" is missing") if @child.nil?
+        raise ParserError.new("\"#{@name}\" is missing") if @child.nil?
 
         r = @child.do_parse(i, opts)
 
