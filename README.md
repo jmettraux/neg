@@ -166,6 +166,13 @@ Neg was published on the 2012-10-06 as it was presented to [Hiroshima.rb](http:/
 The \[very dry\] deck of slides that accompanied it can be found at <https://speakerdeck.com/u/jmettraux/p/neg-a-neg-narser>.
 
 
+## links
+
+* source: <https://github.com/jmettraux/neg>
+* issues: <https://github.com/jmettraux/neg/issues>
+* irc: freenode.net #ruote
+
+
 ## license
 
 MIT (see LICENSE.txt)
