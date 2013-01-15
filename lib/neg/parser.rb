@@ -53,7 +53,7 @@ module Neg
       @root ||= m
       pa = NonTerminalParser.new(m)
 
-      (class << self; self; end).send(:define_method, m) { pa }
+      (class << self; self; end).__send__(:define_method, m) { pa }
 
       pa
     end
@@ -62,7 +62,7 @@ module Neg
 
       i = Neg::Input(s)
 
-      result = send(@root).parse(i, opts)
+      result = __send__(@root).parse(i, opts)
 
       raise UnconsumedInputError.new(
         "remaining: #{i.remains.inspect}"
@@ -93,7 +93,7 @@ module Neg
         next unless m.owner.ancestors.include?(Class)
         next unless m.receiver.ancestors.include?(Neg::Parser)
 
-        s << "  #{send(mname).to_s}"
+        s << "  #{__send__(mname).to_s}"
       end
 
       s << "  root: #{@root}"

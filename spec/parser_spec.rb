@@ -18,6 +18,21 @@ describe 'Neg::Parser' do
     end
   end
 
+#  describe 'the blankslate' do
+#
+#    it 'lets through node names like "send"' do
+#
+#      parser =
+#        Class.new(Neg::Parser) do
+#          send == `x`
+#        end
+#
+#      parser.parse("x").should == [ :send, [ 0, 1, 1 ], true, 'x', [] ]
+#    end
+#  end
+  #
+  # not worth the pain for now
+
   describe '.parse' do
 
     let(:parser) {
