@@ -10,7 +10,7 @@ describe 'sample JSON parser' do
 
       json == spaces? + value + spaces?
 
-      spaces? == _(" \t") * 0
+      spaces? == _("\s\n\r") * 0
 
       value == object | array | string | number | btrue | bfalse | null
 
@@ -180,6 +180,16 @@ describe 'sample JSON parser' do
 
     JsonParser.parse('{ "a": [ 1, 2, "trois" ] }').should ==
       { 'a' => [ 1, 2, 'trois' ] }
+  end
+
+  it 'tolerates newlines' do
+
+    JsonParser.parse(%{
+      [ 1,2
+      , 3
+      ]
+    }).should ==
+      [ 1, 2, 3 ]
   end
 
   it 'raises a ParseError on incorrect input' do
