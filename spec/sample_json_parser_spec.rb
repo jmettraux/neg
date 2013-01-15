@@ -8,16 +8,17 @@ describe 'sample JSON parser' do
 
     parser do
 
-      json == spaces? + value + spaces?
+      value ==
+        spaces? +
+        (object | array | string | number | btrue | bfalse | null) +
+        spaces?
 
       spaces? == _("\s\n\r") * 0
 
-      value == object | array | string | number | btrue | bfalse | null
-
       object == `{` + (entry + (`,` + entry) * 0) * 0 + `}`
-      entry == spaces? + string + spaces? + `:` + json
+      entry == spaces? + string + spaces? + `:` + value
 
-      array == `[` + (json + (`,` + json) * 0) * 0 + `]`
+      array == `[` + (value + (`,` + value) * 0) * 0 + `]`
 
       string == `"` + ((`\\` + _) | _('^"')) * 0 + `"`
 
@@ -36,8 +37,7 @@ describe 'sample JSON parser' do
 
     translator do
 
-      on(:json) { |n| n.results.first }
-      on(:value) { |n| n.results.first }
+      on(:value) { |n| n.results.first.first }
       on(:spaces?) { throw nil }
 
       on(:object) { |n|
@@ -64,39 +64,42 @@ describe 'sample JSON parser' do
   it 'parses "false"' do
 
     JsonParser.parse("false", :translate => false).should ==
-      [ :json,
+      [ :value,
         [ 0, 1, 1 ],
         true,
         nil,
-        [ [ :spaces?, [ 0, 1, 1 ], true, '', [] ],
-          [ :value, [ 0, 1, 1 ], true, nil, [
-            [ :bfalse, [ 0, 1, 1 ], true, 'false', [] ] ] ],
-          [ :spaces?, [ 5, 1, 6 ], true, '', [] ] ] ]
+        [
+          [ :spaces?, [ 0, 1, 1 ], true, "", [] ],
+          [ nil, [ 0, 1, 1 ], true, nil, [
+            [:bfalse, [ 0, 1, 1 ], true, "false", [] ] ] ],
+          [ :spaces?, [ 5, 1, 6 ], true, "", [] ] ] ]
   end
 
   it 'parses "13"' do
 
     JsonParser.parse("13", :translate => false).should ==
-      [ :json,
+      [ :value,
         [ 0, 1, 1 ],
         true,
         nil,
-        [ [ :spaces?, [ 0, 1, 1 ], true, "", [] ],
-          [ :value, [ 0, 1, 1 ], true, nil, [
-            [ :number, [ 0, 1, 1 ], true, "13", [] ] ] ],
+        [
+          [ :spaces?, [ 0, 1, 1 ], true, "", [] ],
+          [ nil, [ 0, 1, 1 ], true, nil, [
+            [:number, [ 0, 1, 1 ], true, "13", [] ] ] ],
           [ :spaces?, [ 2, 1, 3 ], true, "", [] ] ] ]
   end
 
   it 'parses "-12"' do
 
     JsonParser.parse("-12", :translate => false).should ==
-      [ :json,
+      [ :value,
         [ 0, 1, 1 ],
         true,
         nil,
-        [ [ :spaces?, [ 0, 1, 1 ], true, "", [] ],
-          [ :value, [ 0, 1, 1 ], true, nil, [
-            [ :number, [ 0, 1, 1 ], true, "-12", [] ] ] ],
+        [
+          [ :spaces?, [ 0, 1, 1 ], true, "", [] ],
+          [ nil, [ 0, 1, 1 ], true, nil, [
+            [:number, [ 0, 1, 1 ], true, "-12", [] ] ] ],
           [ :spaces?, [ 3, 1, 4 ], true, "", [] ] ] ]
   end
 
