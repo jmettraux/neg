@@ -83,6 +83,12 @@ Here is the classical arithmetic example:
 
   NonTerminalParser
     brand == `mazda` | `ford`  # "brand" is the non-terminal
+
+  NonTerminalParser (name is omitted in output parse tree)
+    _operator == `+` | `*` | `-` | `/`
+
+  Embedded naming (here "operator")
+    operation == number + (`+` | `-`)["operator"] + number
 ```
 
 
