@@ -88,7 +88,31 @@ Here is the classical arithmetic example:
 
 ## parser output
 
-TODO
+Without a translator, the parser outputs a raw parse tree, something like:
+
+```ruby
+[ :json,
+  [ 0, 1, 1 ],
+  true,
+  nil,
+  [ [ :spaces?, [ 0, 1, 1 ], true, '', [] ],
+    [ :value, [ 0, 1, 1 ], true, nil, [
+      [ :bfalse, [ 0, 1, 1 ], true, 'false', [] ] ] ],
+    [ :spaces?, [ 5, 1, 6 ], true, '', [] ] ] ]
+```
+
+It's a nested assemblage of result nodes.
+
+```ruby
+[ rule_name, [ offset, line, column ], success?, result, children ]
+  #
+  # for example
+[ :bfalse, [ 0, 1, 1 ], true, 'false', [] ]
+```
+
+In case of successful parsing, the succes? == false also get all pruned. In case of failed parsing, they are left in the output parse tree.
+
+A translator turns a raw parse tree into some final result. Look below and at the JSON parser sample in the specs for more information. If the parse failed and a translator is present, a ParseError is raised.
 
 
 ## parser + translator
@@ -125,6 +149,8 @@ end
 CompactArithParser.parse("1+2+3")
   # => [ 1, '+', 2, '+', 3 ]
 ```
+
+As said above, when a translator is present and the parsing fails (before the translator kicks in), a ParseError is raised, with fancy methods to navigate the failed parse tree.
 
 
 ## presentations
