@@ -10,11 +10,11 @@ describe 'sample compact arith parser' do
 
       expression  == operation
 
-      operator    == `+` | `-` | `*` | `/`
-      operation   == value + (operator + value) * 0
-      value       == parenthese | number
-      parenthese  == `(` + expression + `)`
-      number      == `-` * -1 + _('0-9') * 1
+      operator     == `+` | `-` | `*` | `/`
+      operation    == value + (operator + value) * 0
+      value        == parentheses | number
+      parentheses  == `(` + expression + `)`
+      number       == `-` * -1 + _('0-9') * 1
     end
 
     translator do
