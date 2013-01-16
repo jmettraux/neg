@@ -1,4 +1,3 @@
-
 # neg
 
 A neg narser.
@@ -30,11 +29,11 @@ Here is the classical arithmetic example:
 
     expression  == operation
 
-    operator    == `+` | `-` | `*` | `/`
-    operation   == value + (operator + value) * 0
-    value       == parenthese | number
-    parenthese  == `(` + expression + `)`
-    number      == `-` * -1 + _('0-9') * 1
+    operator     == `+` | `-` | `*` | `/`
+    operation    == value + (operator + value) * 0
+    value        == parentheses | number
+    parentheses  == `(` + expression + `)`
+    number       == `-` * -1 + _('0-9') * 1
   end
 
   tree = ArithParser.parse("1+(2*12)")
@@ -116,7 +115,7 @@ It's a nested assemblage of result nodes.
 [ :bfalse, [ 0, 1, 1 ], true, 'false', [] ]
 ```
 
-In case of successful parsing, the succes? == false also get all pruned. In case of failed parsing, they are left in the output parse tree.
+In case of successful parsing, the success? == false also get all pruned. In case of failed parsing, they are left in the output parse tree.
 
 A translator turns a raw parse tree into some final result. Look below and at the JSON parser sample in the specs for more information. If the parse failed and a translator is present, a ParseError is raised.
 
@@ -132,11 +131,11 @@ class CompactArithParser < Neg::Parser
 
     expression  == operation
 
-    operator    == `+` | `-` | `*` | `/`
-    operation   == value + (operator + value) * 0
-    value       == parenthese | number
-    parenthese  == `(` + expression + `)`
-    number      == `-` * -1 + _('0-9') * 1
+    operator     == `+` | `-` | `*` | `/`
+    operation    == value + (operator + value) * 0
+    value        == parentheses | number
+    parentheses  == `(` + expression + `)`
+    number       == `-` * -1 + _('0-9') * 1
   end
 
   translator do
