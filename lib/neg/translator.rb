@@ -70,6 +70,18 @@ module Neg
       def column;    @parse_tree[1][2]; end
 
       def result;    @parse_tree[3]; end
+
+      # Useful when the grammar has something of the form:
+      #
+      #   array == `[` + (value + (`,` + value) * 0) * 0 + `]`
+      #
+      # It flattens the value array.
+      #
+      def flattened_results
+
+        f2 = results.flatten(2)
+        f2.any? ? [ f2.shift ] + f2.flatten(2) : []
+      end
     end
   end
 end
