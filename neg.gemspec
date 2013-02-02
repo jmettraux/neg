@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.platform = Gem::Platform::RUBY
   s.authors = [ 'John Mettraux' ]
   s.email = [ 'jmettraux@gmail.com' ]
-  s.homepage = 'https://github.com/jmettraux/leg'
+  s.homepage = 'https://github.com/jmettraux/neg'
   s.rubyforge_project = 'ruote'
   s.summary = 'a neg narser'
 
