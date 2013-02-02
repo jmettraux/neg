@@ -123,10 +123,6 @@ module Neg
 
         input.rewind(start) unless success
 
-        #if success && children.size == 1 && children.first[1] == start
-        #  return children.first
-        #end
-
         [ nil, start, success, result, children ]
       end
     end

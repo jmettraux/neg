@@ -32,14 +32,16 @@ module Neg
 
   class ParseError < NegError
 
-    attr_reader :tree
+    attr_reader :tree, :position
 
     def initialize(tree)
 
       @tree = tree
       @nodes = list_nodes(tree)
 
-      super(deepest_error[3])
+      d = deepest_error
+      @position = d[1]
+      super(d[3])
     end
 
     def errors
@@ -51,6 +53,10 @@ module Neg
 
       errors.inject { |e, n| e[1][0] < n[1][0] ? n : e }
     end
+
+    def offset;  @position[0]; end
+    def line;    @position[1]; end
+    def column;  @position[2]; end
 
     protected
 
