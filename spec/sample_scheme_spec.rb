@@ -19,10 +19,7 @@ describe 'sample scheme parser' do
       on(:expression) { |n| n.results.first }
       on(:atom) { |n| n.result }
 
-      on(:list) { |n|
-        f2 = n.results.flatten(2)
-        f2.any? ? [ f2.shift ] + f2.flatten(2) : []
-      }
+      on(:list) { |n| n.flattened_results }
     end
   end
 

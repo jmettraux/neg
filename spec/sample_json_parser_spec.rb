@@ -40,14 +40,8 @@ describe 'sample JSON parser' do
       on(:value) { |n| n.results.first.first }
       on(:spaces?) { throw nil }
 
-      on(:object) { |n|
-        f2 = n.results.flatten(2)
-        Hash[f2.any? ? [ f2.shift ] + f2.flatten(2) : []]
-      }
-      on(:array) { |n|
-        f2 = n.results.flatten(2)
-        f2.any? ? [ f2.shift ] + f2.flatten(2) : []
-      }
+      on(:object) { |n| Hash[n.flattened_results] }
+      on(:array) { |n| n.flattened_results }
 
       on(:string) { |n| eval(n.result) }
 
