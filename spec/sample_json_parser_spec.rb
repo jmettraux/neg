@@ -192,8 +192,8 @@ describe 'sample JSON parser' do
   it 'raises a ParseError on incorrect input' do
 
     lambda do
-      JsonParser.parse("x")
-    end.should raise_error(Neg::ParseError, 'expected "{", got "x"')
+      JsonParser.parse('x')
+    end.should raise_error(Neg::ParseError, 'expected "null", got "x"')
   end
 end
 

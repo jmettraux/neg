@@ -22,7 +22,7 @@ describe 'sample math parser' do
     on(:value)     { |n| n.results.first }
 
     on(:expression) { |n|
-      results = n.results.flatten(2)
+      results = n.flattened_results
       results.size == 1 ? results.first : results
     }
   end

@@ -85,7 +85,8 @@ describe 'neg and errors' do
     end
 
     err.class.should == Neg::ParseError
-    err.position.should == :x
+    err.position.should == [ 81, 7, 6 ]
+    err.message.should == 'expected "end", got ""'
   end
 
   it 'fails gracefully on a li too much (2)' do
@@ -106,7 +107,8 @@ describe 'neg and errors' do
     end
 
     err.class.should == Neg::ParseError
-    err.position.should == :x
+    err.position.should == [ 75, 6, 12 ]
+    err.message.should == 'expected "end", got "li\n"'
   end
 end
 

@@ -18,14 +18,15 @@ describe Neg::Parser::RepetitionParser do
         [ :text, [ 0, 1, 1 ], true, '', [] ]
     end
 
-    it 'fails gracefully' do
-
-      lambda {
-        parser.parse('xx')
-      }.should raise_error(
-        Neg::UnconsumedInputError,
-        'remaining: "x"')
-    end
+    #it 'fails gracefully' do
+    #  lambda {
+    #    parser.parse('xx')
+    #  }.should raise_error(
+    #    Neg::UnconsumedInputError,
+    #    'remaining: "x"')
+    #end
+      #
+      # UnconsumedInputError is gone.
 
     it 'is rendered correctly via #to_s' do
 
@@ -57,14 +58,15 @@ describe Neg::Parser::RepetitionParser do
         [ :text, [ 0, 1, 1 ], true, 'xxx', [] ]
     end
 
-    it 'fails gracefully' do
-
-      lambda {
-        parser.parse('a')
-      }.should raise_error(
-        Neg::UnconsumedInputError,
-        'remaining: "a"')
-    end
+    #it 'fails gracefully' do
+    #  lambda {
+    #    parser.parse('a')
+    #  }.should raise_error(
+    #    Neg::UnconsumedInputError,
+    #    'remaining: "a"')
+    #end
+      #
+      # UnconsumedInputError is gone.
   end
 
   context '`x` * 2 (at least 2)' do
@@ -113,12 +115,13 @@ describe Neg::Parser::RepetitionParser do
           [ nil, [ 2, 1, 3 ], false, 'expected "x", got ""', [] ] ] ]
     end
 
-    it 'fails gracefully (unconsumed input)' do
-
-      lambda {
-        parser.parse('xxxx')
-      }.should raise_error(Neg::UnconsumedInputError, 'remaining: "x"')
-    end
+    #it 'fails gracefully (unconsumed input)' do
+    #  lambda {
+    #    parser.parse('xxxx')
+    #  }.should raise_error(Neg::UnconsumedInputError, 'remaining: "x"')
+    #end
+      #
+      # UnconsumedInputError is gone.
 
     it 'is rendered correctly via #to_s' do
 

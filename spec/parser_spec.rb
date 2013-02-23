@@ -33,30 +33,52 @@ describe 'Neg::Parser' do
   #
   # not worth the pain for now
 
-  describe '.parse' do
+#  describe '.parse' do
+#
+#    let(:parser) {
+#      Class.new(Neg::Parser) do
+#        text == `x`
+#      end
+#    }
+#
+#    it 'raises on unconsumed input' do
+#
+#      lambda {
+#        parser.parse('xy')
+#      }.should raise_error(
+#        Neg::UnconsumedInputError,
+#        'remaining: "y"')
+#    end
+#
+#    it 'raises on unconsumed input (...)' do
+#
+#      lambda {
+#        parser.parse('xyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy')
+#      }.should raise_error(
+#        Neg::UnconsumedInputError,
+#        'remaining: "yyyyyyy..."')
+#    end
+#  end
+  #
+  # UnconsumedInputError is gone.
+
+  context 'unconsumed input' do
 
     let(:parser) {
       Class.new(Neg::Parser) do
-        text == `x`
+        text == `x` * -1
       end
     }
 
-    it 'raises on unconsumed input' do
+    it 'fails gracefully' do
 
-      lambda {
-        parser.parse('xy')
-      }.should raise_error(
-        Neg::UnconsumedInputError,
-        'remaining: "y"')
-    end
-
-    it 'raises on unconsumed input (...)' do
-
-      lambda {
-        parser.parse('xyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy')
-      }.should raise_error(
-        Neg::UnconsumedInputError,
-        'remaining: "yyyyyyy..."')
+      parser.parse('xx').should ==
+        [ :text,
+          [ 0, 1, 1 ],
+           false,
+            'x',
+             [ [ nil, [0, 1, 1], true, 'x', [] ],
+               [ nil, [1, 1, 2], false, 'did not expect "x" (min 0 max 1)', [] ] ] ]
     end
   end
 end
