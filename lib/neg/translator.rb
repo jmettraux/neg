@@ -77,6 +77,8 @@ module Neg
       #
       # It flattens the value array.
       #
+      # Look at the spec/sample_* files to see it in action.
+      #
       def flattened_results
 
         f2 = results.flatten(2)
