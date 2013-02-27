@@ -145,7 +145,7 @@ class CompactArithParser < Neg::Parser
     on(:value)     { |n| n.results.first }
 
     on(:expression) { |n|
-      results = n.results.flatten(2)
+      results = n.flattened_results
       results.size == 1 ? results.first : results
     }
   end
@@ -155,7 +155,11 @@ CompactArithParser.parse("1+2+3")
   # => [ 1, '+', 2, '+', 3 ]
 ```
 
+The original of this parser lies in [spec/sample_arith_spec.rb](spec/sample_arith_spec.rb). Please note that it's very dumb (like everything in neg) and, for example, avoids carefully dealing with operator precedence for its target language.
+
 As said above, when a translator is present and the parsing fails (before the translator kicks in), a ParseError is raised, with fancy methods to navigate the failed parse tree.
+
+See also the [sample JSON parser](spec/sample_json_parser_spec.rb) and a [tiny toy scheme parser](spec/sample_scheme_spec.rb).
 
 
 ## presentations
