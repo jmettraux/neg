@@ -58,15 +58,26 @@ module Neg
       pa
     end
 
+    def self.reduce(result)
+
+      if result[0] && result[2] && result[3]
+        result[4] =
+          []
+      else
+        result[4] =
+          result[4].each_with_object([]) { |cr, a| a << reduce(cr) if cr[2] }
+      end
+
+      result
+    end
+
     def self.parse(s, opts={})
 
       i = Neg::Input(s)
 
       result = __send__(@root).parse(i, opts)
 
-      raise UnconsumedInputError.new(
-        "remaining: #{i.remains.inspect}"
-      ) if result[2] && ( ! i.eoi?)
+      result[2] = false if result[2] && ( ! i.eoi?)
 
       if @translator && opts[:translate] != false
         if result[2]
@@ -74,8 +85,10 @@ module Neg
         else
           raise ParseError.new(result)
         end
-      else
+      elsif result[2] == false || opts[:noreduce]
         result
+      else
+        reduce(result)
       end
     end
 
@@ -123,10 +136,6 @@ module Neg
 
         input.rewind(start) unless success
 
-        #if success && children.size == 1 && children.first[1] == start
-        #  return children.first
-        #end
-
         [ nil, start, success, result, children ]
       end
     end
@@ -144,13 +153,13 @@ module Neg
         @child = pa
       end
 
-      def reduce(children_results)
+      def refine(children_results)
 
         children_results.collect { |cr|
           if cr[0] && cr[0].to_s.match(/^_/).nil?
             false
           elsif cr[2]
-            cr[3] ? cr[3] : reduce(cr[4])
+            cr[3] ? cr[3] : refine(cr[4])
           else
             nil
           end
@@ -166,11 +175,10 @@ module Neg
         return r if r[0] == false
         return r if r[1].is_a?(String)
 
-        report = reduce(r[2])
+        report = refine(r[2])
+        report = report.include?(false) ? nil : report.join
 
-        return r if report.include?(false)
-
-        [ true, report.join, opts[:noreduce] ? r[2] : [] ]
+        [ true, report, r[2] ]
       end
 
       def parse(input_or_string, opts)
@@ -214,14 +222,28 @@ module Neg
         rs = []
 
         loop do
-          r = @child.parse(i, opts)
-          break if ! r[2] && rs.size >= @min && (@max.nil? || rs.size <= @max)
-          rs << r
-          break if ! r[2]
-          break if rs.size == @max
+          rs << @child.parse(i, opts)
+          break if rs.last[2] == false
         end
 
-        success = (rs.empty? || rs.last[2]) && (rs.size >= @min)
+        rs.size.downto(1) do |i|
+
+          r = rs[i - 1]
+
+          next if r[2] == false
+
+          if @max && i > @max
+            r[2] = false
+            r[3] = "did not expect #{r[3].inspect} (min #{@min} max #{@max})"
+          end
+        end
+
+        trs = rs.take_while { |r| r[2] == true }
+        rs = trs + [ rs.find { |r| r[2] == false } ]
+
+        success = trs.size >= @min && (@max.nil? || trs.size <= @max)
+
+        i.rewind(rs.last[1]) if success && rs.last[2] == false
 
         [ success, nil, rs ]
       end

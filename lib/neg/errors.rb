@@ -27,19 +27,20 @@ module Neg
 
   class NegError < StandardError; end
 
-  class UnconsumedInputError < NegError; end
   class ParserError < NegError; end
 
   class ParseError < NegError
 
-    attr_reader :tree
+    attr_reader :tree, :position
 
     def initialize(tree)
 
       @tree = tree
       @nodes = list_nodes(tree)
 
-      super(deepest_error[3])
+      d = deepest_error
+      @position = d[1]
+      super(d[3])
     end
 
     def errors
@@ -49,15 +50,30 @@ module Neg
 
     def deepest_error
 
-      errors.inject { |e, n| e[1][0] < n[1][0] ? n : e }
+      # let's keep the tree depth (e[5]) for later
+
+      errors.inject do |eold, enew|
+        if eold[1][0] <= enew[1][0]
+          enew
+        else
+          eold
+        end
+      end
     end
+
+    def offset;  @position[0]; end
+    def line;    @position[1]; end
+    def column;  @position[2]; end
 
     protected
 
-    def list_nodes(start, accumulator=[])
+    def list_nodes(start, depth=0, accumulator=[])
+
+      start = start.dup
+      start << depth
 
       accumulator << start
-      start[4].each { |n| list_nodes(n, accumulator) }
+      start[4].each { |n| list_nodes(n, depth + 1, accumulator) }
 
       accumulator
     end

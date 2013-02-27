@@ -40,8 +40,8 @@ module Neg
     def self.translate(parse_tree)
 
       results =
-        parse_tree[4].each_with_object([]) { |node, a|
-          catch(nil) { a << translate(node) }
+        parse_tree[4].each_with_object([]) { |tree, a|
+          catch(nil) { a << translate(tree) } if tree[2]
         }
 
       apply(parse_tree, results)
