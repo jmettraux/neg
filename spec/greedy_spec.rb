@@ -67,6 +67,7 @@ describe 'neg and errors' do
 
     err.class.should == Neg::ParseError
     err.position.should == [ 53, 5, 6 ]
+    err.message.should == 'expected "end", got ""'
   end
 
   it 'fails gracefully on a missing end (1)' do

@@ -2,8 +2,10 @@
 # neg - CHANGELOG.md
 
 
-## neg - 1.0.1    not yet released
+## neg - 1.1.0    released 2013-02-28
 
+- giving the "right" error on unconsumed input
+- get rid of UnconsumedInputError
 - translator: introduce n.flattened_results
 
 
