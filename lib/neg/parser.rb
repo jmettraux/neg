@@ -183,8 +183,17 @@ module Neg
 
       def parse(input_or_string, opts)
 
-        r = super
+        input = Neg::Input(input_or_string)
+
+        if memo = input.get_memo(@name)
+          input.rewind(memo.end)
+          return memo.result
+        end
+
+        r = super(input, opts)
         r[0] = @name
+
+        input.set_memo(r)
 
         r
       end

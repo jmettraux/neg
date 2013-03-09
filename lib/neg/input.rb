@@ -35,6 +35,8 @@ module Neg
     def initialize(s)
 
       @s = s
+      @memos = {}
+
       rewind
     end
 
@@ -83,6 +85,18 @@ module Neg
       rem = read(7)
 
       rem.length >= 7 ? rem = rem + '...' : rem
+    end
+
+    MemoEntry = Struct.new(:result, :end)
+
+    def get_memo(key)
+
+      @memos["#{key}--#{@offset}"]
+    end
+
+    def set_memo(result)
+
+      @memos["#{result[0]}--#{result[1][0]}"] = MemoEntry.new(result, position)
     end
   end
 end
