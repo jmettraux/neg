@@ -1,5 +1,7 @@
 # neg
 
+[![Build Status](https://secure.travis-ci.org/jmettraux/neg.png)](http://travis-ci.org/jmettraux/neg)
+
 A neg narser.
 
 A silly little exploration project.
