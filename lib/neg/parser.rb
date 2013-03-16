@@ -136,7 +136,7 @@ module Neg
 
         input.rewind(start) unless success
 
-        [ nil, start, success, result, children ]
+        [ @name, start, success, result, children ]
       end
     end
 
@@ -191,7 +191,6 @@ module Neg
         end
 
         r = super(input, opts)
-        r[0] = @name
 
         input.set_memo(r)
 
