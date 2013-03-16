@@ -51,5 +51,22 @@ describe Neg::Parser::SequenceParser do
         nil,
         [ [ :pool, [ 0, 1, 1 ], true, "pool", [] ] ] ]
   end
+
+  it 'does not concat non-terminal results' do
+
+    parser = Class.new(Neg::Parser) do
+      data == num + `+` + num
+      num == _('0-9') * 1
+    end
+
+    parser.parse('12+10').should ==
+      [ :data,
+        [ 0, 1, 1],
+        true,
+        nil, [
+          [ :num, [ 0, 1, 1 ], true, '12', [] ],
+          [ nil, [ 2, 1, 3 ], true, '+', [] ],
+          [ :num, [ 3, 1, 4 ], true, '10', [] ] ] ]
+  end
 end
 
