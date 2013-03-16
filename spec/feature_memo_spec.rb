@@ -12,17 +12,31 @@ describe 'memo feature' do
 
   def parse(s, opts={})
 
-    MemoParser.parse(s, opts)
+    i = Neg::Input(s)
+
+    r = MemoParser.parse(i, opts)
+
+    [ i, r ]
   end
 
   it 'parses additions' do
 
-    parse('12+34')[2].should == true
+    i, r = parse('12+34')
+
+    r[2].should ==
+      true
+    i.instance_variable_get(:@memos).keys.sort.should ==
+      %w[ exp--0 num--0 num--3 ]
   end
 
   it 'parses substractions' do
 
-    parse('12-34')[2].should == true
+    i, r = parse('12-34')
+
+    r[2].should ==
+      true
+    i.instance_variable_get(:@memos).keys.sort.should ==
+      %w[ exp--0 num--0 num--3 ]
   end
 end
 
