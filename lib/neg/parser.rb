@@ -106,7 +106,9 @@ module Neg
         next unless m.owner.ancestors.include?(Class)
         next unless m.receiver.ancestors.include?(Neg::Parser)
 
-        s << "  #{__send__(mname).to_s}"
+        seen = []
+
+        s << "  #{__send__(mname).to_s(seen, nil)}"
       end
 
       s << "  root: #{@root}"
@@ -197,9 +199,12 @@ module Neg
         r
       end
 
-      def to_s(parent=nil)
+      def to_s(seen=[], parent=nil)
 
-        child = @child ? @child.to_s(self) : '<missing>'
+        return @name if seen.include?(@name)
+        seen << @name
+
+        child = @child ? @child.to_s(seen, self) : '<missing>'
 
         if @name.is_a?(String)
           "#{child}[#{@name.inspect}]"
@@ -256,9 +261,9 @@ module Neg
         [ success, nil, rs ]
       end
 
-      def to_s(parent=nil)
+      def to_s(seen=[], parent=nil)
 
-        "#{@child.to_s(self)} * #{@range.inspect}"
+        "#{@child.to_s(seen, self)} * #{@range.inspect}"
       end
     end
 
@@ -278,7 +283,7 @@ module Neg
         end
       end
 
-      def to_s(parent=nil)
+      def to_s(seen=[], parent=nil)
 
         "`#{@s}`"
       end
@@ -301,7 +306,7 @@ module Neg
         end
       end
 
-      def to_s(parent=nil)
+      def to_s(seen=[], parent=nil)
 
         @c ? "_(#{@c.inspect})" : '_'
       end
@@ -337,9 +342,9 @@ module Neg
         [ results.last[2], nil, results ]
       end
 
-      def to_s(parent=nil)
+      def to_s(seen=[], parent=nil)
 
-        "(#{@children.collect { |c| c.to_s(self) }.join(' + ')})"
+        "(#{@children.collect { |c| c.to_s(seen, self) }.join(' + ')})"
       end
     end
 
@@ -366,9 +371,9 @@ module Neg
         [ results.last[2], nil, results ]
       end
 
-      def to_s(parent=nil)
+      def to_s(seen=[], parent=nil)
 
-        "(#{@children.collect { |c| c.to_s(self) }.join(' | ')})"
+        "(#{@children.collect { |c| c.to_s(seen, self) }.join(' | ')})"
       end
     end
 
@@ -401,9 +406,9 @@ module Neg
         [ success, result, [ r ] ]
       end
 
-      def to_s(parent=nil)
+      def to_s(seen=[], parent=nil)
 
-        "#{@presence ? '~' : '-'}#{@child.to_s(self)}"
+        "#{@presence ? '~' : '-'}#{@child.to_s(seen, self)}"
       end
     end
   end

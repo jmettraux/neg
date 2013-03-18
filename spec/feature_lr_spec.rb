@@ -17,6 +17,16 @@ describe 'lr feature' do
       DirectLrParser.parse(s, opts)
     end
 
+    it 'renders via #to_s' do
+
+      DirectLrParser.to_s.strip.should == %{
+DirectLrParser:
+  exp == ((exp + `+` + num) | num)
+  num == _("0-9")
+  root: exp
+      }.strip
+    end
+
     it 'parses additions' do
 
       #dparse('10+12').should ==
@@ -64,6 +74,17 @@ describe 'lr feature' do
     def iparse(s, opts={})
 
       IndirectLrParser.parse(s, opts)
+    end
+
+    it 'renders via #to_s' do
+
+      IndirectLrParser.to_s.strip.should == %{
+IndirectLrParser:
+  exp == ((x + `+` + num) | num)
+  num == _("0-9")
+  x == exp
+  root: exp
+      }.strip
     end
 
     it 'parses additions' do
