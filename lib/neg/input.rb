@@ -97,6 +97,8 @@ module Neg
     def set_memo(result)
 
       @memos["#{result[0]}--#{result[1][0]}"] = MemoEntry.new(result, position)
+
+      result
     end
   end
 end

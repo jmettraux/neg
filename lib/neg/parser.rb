@@ -188,15 +188,17 @@ module Neg
         input = Neg::Input(input_or_string)
 
         if memo = input.get_memo(@name)
+
           input.rewind(memo.end)
-          return memo.result
+
+          memo.result
+
+        else
+
+          r = super(input, opts)
+
+          input.set_memo(r)
         end
-
-        r = super(input, opts)
-
-        input.set_memo(r)
-
-        r
       end
 
       def to_s(seen=[], parent=nil)
