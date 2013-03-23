@@ -8,8 +8,7 @@ describe 'lr feature' do
 
     class DirectLrParser < Neg::Parser
 
-      exp == exp + `+` + num | num
-      num == _('0-9')
+      exp == exp + `+` + `1` | `1`
     end
 
     def dparse(s, opts={})
@@ -21,34 +20,25 @@ describe 'lr feature' do
 
       DirectLrParser.to_s.strip.should == %{
 DirectLrParser:
-  exp == ((exp + `+` + num) | num)
-  num == _("0-9")
+  exp == ((exp + `+` + `1`) | `1`)
   root: exp
       }.strip
     end
 
     it 'parses additions' do
 
-      #dparse('10+12').should ==
-      #  [ :exp, [ 0, 1, 1 ], true, nil, [
-      #    [ nil, [ 0, 1, 1 ], true, nil, [
-      #      [ :exp, [ 0, 1, 1 ], true, nil, [
-      #        [ :num, [ 0, 1, 1 ], true, '10', [] ] ] ],
-      #        [ nil, [ 2, 1, 3 ], true, '+', [] ],
-      #        [ :num, [ 3, 1, 4 ], true, '12', [] ] ] ] ] ]
-      pp dparse('1+2+3')
+      pp dparse('1+1+1')
     end
 
     # TODO: class TranslatedLrParser
   end
 
-  context 'nested lr' do
+  context 'direct lr (2)' do
 
     class NestedLrParser < Neg::Parser
 
       x == exp
-      exp == x + `+` + num | num
-      num == _('0-9')
+      exp == x + `+` + `2` | `2`
     end
 
     def nparse(s, opts={})
@@ -58,7 +48,7 @@ DirectLrParser:
 
     it 'parses additions' do
 
-      pp nparse('4+5+6')
+      pp nparse('2+2+2')
     end
   end
 
@@ -66,9 +56,8 @@ DirectLrParser:
 
     class IndirectLrParser < Neg::Parser
 
-      exp == x + `+` + num | num
+      exp == x + `+` + `3` | `3`
       x == exp
-      num == _('0-9')
     end
 
     def iparse(s, opts={})
@@ -80,8 +69,7 @@ DirectLrParser:
 
       IndirectLrParser.to_s.strip.should == %{
 IndirectLrParser:
-  exp == ((x + `+` + num) | num)
-  num == _("0-9")
+  exp == ((x + `+` + `3`) | `3`)
   x == exp
   root: exp
       }.strip
@@ -89,7 +77,7 @@ IndirectLrParser:
 
     it 'parses additions' do
 
-      pp iparse('7+8+9')
+      pp iparse('3+3+3')
     end
   end
 end
