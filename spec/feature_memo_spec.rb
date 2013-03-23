@@ -25,8 +25,7 @@ describe 'memo feature' do
 
     r[2].should ==
       true
-    i.instance_variable_get(:@memos).keys.sort.should ==
-      %w[ exp--0 num--0 num--3 ]
+    i.instance_variable_get(:@memos).keys.sort.should == %w[ exp@0 num@0 num@3 ]
   end
 
   it 'parses substractions' do
@@ -35,8 +34,7 @@ describe 'memo feature' do
 
     r[2].should ==
       true
-    i.instance_variable_get(:@memos).keys.sort.should ==
-      %w[ exp--0 num--0 num--3 ]
+    i.instance_variable_get(:@memos).keys.sort.should == %w[ exp@0 num@0 num@3 ]
   end
 end
 

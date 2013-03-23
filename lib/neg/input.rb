@@ -91,12 +91,12 @@ module Neg
 
     def get_memo(key)
 
-      @memos["#{key}--#{@offset}"]
+      @memos["#{key}@#{@offset}"]
     end
 
     def set_memo(result)
 
-      @memos["#{result[0]}--#{result[1][0]}"] = MemoEntry.new(result, position)
+      @memos["#{result[0]}@#{result[1][0]}"] = MemoEntry.new(result, position)
 
       result
     end
