@@ -58,17 +58,30 @@ module Neg
       pa
     end
 
-    def self.reduce(result)
+    def self.reduce(r)
 
-      if result[0] && result[2] && result[3]
-        result[4] =
-          []
+      ntt = r[0] && r[2] # non-terminal and true
+
+      if ntt && r[3]
+        #
+        # non-terminal success keep the result (string) and discard children
+
+        r[4] = []
+
+      elsif ntt && r[4].map { |c| c[0, 4] } == [ [ nil, r[1], true, nil ] ]
+        #
+        # compact lr output
+
+        r = [ r[0], r[1], true, r[4][0][3], r[4][0][4].map { |rr| reduce(rr) } ]
+
       else
-        result[4] =
-          result[4].each_with_object([]) { |cr, a| a << reduce(cr) if cr[2] }
+        #
+        # reduce further
+
+        r[4] = r[4].each_with_object([]) { |c, a| a << reduce(c) if c[2] }
       end
 
-      result
+      r
     end
 
     def self.parse(s, opts={})
@@ -77,11 +90,12 @@ module Neg
 
       result = __send__(@root).parse(i, opts)
 
+      #p :EOI if result[2] && ( ! i.eoi?)
       result[2] = false if result[2] && ( ! i.eoi?)
 
       if @translator && opts[:translate] != false
         if result[2]
-          @translator.translate(result)
+          @translator.translate(reduce(result))
         else
           raise ParseError.new(result)
         end
@@ -134,12 +148,38 @@ module Neg
         input = Neg::Input(input_or_string)
         start = input.position
 
+        #d = debug(input)
+
         success, result, children = do_parse(input, opts)
 
         input.rewind(start) unless success
 
+        #debug(input, d, start, success, result)
+
         [ @name, start, success, result, children ]
       end
+
+      alias super_parse parse
+
+#      protected
+#
+#      def debug(input, d=nil, start=nil, success=nil, result=nil)
+#
+#        print @name ? "[32m" : "[33m"
+#        if d.nil?
+#          d = (Time.now.to_f * 1000000).to_i.to_s[-4..-1]
+#          print "o-- #{d} parse #{@name || '-'} @ #{input.offset} "
+#          print "#{self} vs #{input} "
+#          print "#{caller[1].split('.rb:').last}"
+#        else
+#          print " \\- #{d} parse #{@name || '-'} @ #{start[0]} "
+#          print "-> #{success}"
+#          print " }#{result}{" if success
+#        end
+#        puts "[0m"
+#
+#        d
+#      end
     end
 
     class NonTerminalParser < SubParser
@@ -183,24 +223,6 @@ module Neg
         [ true, report, r[2] ]
       end
 
-      def parse(input_or_string, opts)
-
-        input = Neg::Input(input_or_string)
-
-        if memo = input.get_memo(@name)
-
-          input.rewind(memo.end)
-
-          memo.result
-
-        else
-
-          r = super(input, opts)
-
-          input.set_memo(r)
-        end
-      end
-
       def to_s(seen=[], parent=nil)
 
         return @name if seen.include?(@name)
@@ -214,6 +236,71 @@ module Neg
           @name.to_s
         else #if @name.is_a?(Symbol)
           "#{@name} == #{child}"
+        end
+      end
+
+      def parse(input_or_string, opts)
+
+        #p :lvar
+
+        input = Neg::Input(input_or_string)
+
+        memo = input.get_memo(@name)
+
+        if memo.nil?                   # lvar.1 or lvar.2
+
+          input.set_memo([ @name, input.position, false, nil, [] ])
+
+          r = super(input, opts)
+
+          m = input.set_memo(r)
+
+          if r[2] == true  # lvar.1
+            #p :lvar1
+            inc(input, opts, m)
+          else             # lvar.2
+            #p :lvar2
+            r
+          end
+
+        elsif memo.result[2] == false  # lvar.3
+
+          #p :lvar3
+          input.rewind(memo.end)
+          memo.result
+
+        else                           # lvar.4
+
+          #p :lvar4
+          input.rewind(memo.end)
+          memo.result # not really sure about this one...
+        end
+      end
+
+      protected
+
+      def inc(input, opts, memo)
+
+        #p :inc
+
+        input.rewind(memo.position)
+
+        r = super_parse(input, opts)
+
+        #p [ input.offset, memo.end_offset ]
+
+        if r[2] == true && input.offset > memo.end_offset   # inc.1
+          #p :inc1
+          m = input.set_memo(r)
+          inc(input, opts, m)
+        elsif r[2] == true                                  # inc.3
+          #p :inc3
+          input.rewind(memo.end)
+          memo.result # ?
+        else                                                # inc.2
+          #p :inc2
+          input.rewind(memo.end)
+          memo.result
         end
       end
     end

@@ -32,6 +32,8 @@ module Neg
 
   class Input
 
+    attr_reader :offset
+
     def initialize(s)
 
       @s = s
@@ -87,18 +89,40 @@ module Neg
       rem.length >= 7 ? rem = rem + '...' : rem
     end
 
-    MemoEntry = Struct.new(:result, :end)
+    def to_s
+
+      "input>#{@s[@offset, 10]}#{@offset + 10 < @s.length ? '...' : ''}<"
+    end
+
+    MemoEntry = Struct.new(:result, :end) do
+
+      def position; result[1]; end
+      def offset; position[0]; end
+      def end_offset; self.end[0]; end
+    end
 
     def get_memo(key)
 
       @memos["#{key}@#{@offset}"]
+
+      #m = @memos["#{key}@#{@offset}"]
+      #print "[34m"
+      #print "    get #{key}@#{@offset}"
+      #print " -> "
+      #print m ? "#{m.result.inspect[0, 63]}...  @ #{m.end.inspect}" : 'nil'
+      #puts "[0m"
+      #m
     end
 
     def set_memo(result)
 
-      @memos["#{result[0]}@#{result[1][0]}"] = MemoEntry.new(result, position)
+      #print "[34m"
+      #puts "    set #{result[0]}@#{result[1][0]} :="
+      #pp result
+      #puts "    ends at #{position.inspect}"
+      #puts "[0m"
 
-      result
+      @memos["#{result[0]}@#{result[1][0]}"] = MemoEntry.new(result, position)
     end
   end
 end
