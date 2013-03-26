@@ -401,7 +401,7 @@ module Neg
           '' # for NonTerminal#reduce not to continue
         else
           [
-            @child.to_s(nil), 'is not', @presence ? 'present' : 'absent'
+            @child.to_s, 'is not', @presence ? 'present' : 'absent'
           ].join(' ')
         end
 
