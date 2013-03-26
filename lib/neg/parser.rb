@@ -197,7 +197,11 @@ module Neg
 
           r = super(input, opts)
 
-          input.set_memo(r)
+          unless @child.is_a?(StringParser) or @child.is_a?(CharacterParser)
+            input.set_memo(r)
+          end
+
+          r
         end
       end
 
