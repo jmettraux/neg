@@ -1,5 +1,6 @@
 
 # neg credits
 
-- thanks to the TravisCI team for their hard work
+- many thanks to Kaspar Schiess for the great Parslet
+- thanks to the TravisCI team for their tool
 
