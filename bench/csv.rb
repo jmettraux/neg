@@ -30,8 +30,14 @@ class CsvParser < Neg::Parser
     comma        == `,`
   end
 
-  #translator do
-  #end
+  translator do
+    on(:file)         { |n| n.results.collect(&:flatten) }
+    on(:record)       { |n| n.flattened_results }
+    on(:escaped)      { |n| n.results.join }
+    on(:non_escaped)  { |n| n.results.join }
+    on(:textdata)     { |n| n.result }
+    on(:newline)      { |n| throw nil }
+  end
 end
 
 #data = File.readlines(File.expand_path('../test_data.csv', __FILE__)).first
@@ -39,6 +45,5 @@ data = File.read(File.expand_path('../test_data.csv', __FILE__))
 
 t = Time.now
 CsvParser.parse(data)
-# TODO: translate!!!
 p Time.now - t
 
