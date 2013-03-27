@@ -106,9 +106,7 @@ module Neg
         next unless m.owner.ancestors.include?(Class)
         next unless m.receiver.ancestors.include?(Neg::Parser)
 
-        seen = []
-
-        s << "  #{__send__(mname).to_s(seen, nil)}"
+        s << "  #{__send__(mname).to_s([], nil)}"
       end
 
       s << "  root: #{@root}"
