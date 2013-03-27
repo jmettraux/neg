@@ -41,6 +41,7 @@ module Neg
       d = deepest_error
       @position = d[1]
       super(d[3])
+      #super("#{d[3]} at line #{d[1][1]} col #{d[1][2]}")
     end
 
     def errors
