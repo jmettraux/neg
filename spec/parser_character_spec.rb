@@ -34,7 +34,6 @@ describe Neg::Parser::CharacterParser do
       parser.to_s.strip.should == %q{
 :
   text == (`x` + _)
-  root: text
       }.strip
     end
   end
@@ -73,7 +72,6 @@ describe Neg::Parser::CharacterParser do
       parser.to_s.strip.should == %q{
 :
   text == (`tel:` + _("0-9-") * 1)
-  root: text
       }.strip
     end
   end

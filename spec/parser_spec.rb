@@ -81,5 +81,32 @@ describe 'Neg::Parser' do
                [ nil, [1, 1, 2], false, 'did not expect "x" (min 0 max 1)', [] ] ] ]
     end
   end
+
+  context 'recursion' do
+
+    let(:parser0) {
+      Class.new(Neg::Parser) do
+        text == `x` * -1
+      end
+    }
+    let(:parser1) {
+      Class.new(Neg::Parser) do
+        exp == exp + `+` + `1` | `1`
+      end
+    }
+
+    describe 'Parser#recursive?' do
+
+      it 'returns false when the grammar is not recursive' do
+
+        parser0.recursive?.class.should == FalseClass
+      end
+
+      it 'returns true when the grammar is not recursive' do
+
+        parser1.recursive?.class.should == TrueClass
+      end
+    end
+  end
 end
 

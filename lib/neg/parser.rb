@@ -92,26 +92,21 @@ module Neg
       end
     end
 
+    def self.recursive?
+
+      nts = __send__(@root).non_terminals
+
+      nts.size != nts.uniq.size
+    end
+
     def self.to_s
 
-      s = [ "#{name}:" ]
-
-      methods.sort.each do |mname|
-
-        m = method(mname)
-
-        next if m.owner == Class
-        next if %w[ _ to_s parser translator ].include?(mname.to_s)
-        next unless m.arity == (RUBY_VERSION > '1.9' ? 0 : -1)
-        next unless m.owner.ancestors.include?(Class)
-        next unless m.receiver.ancestors.include?(Neg::Parser)
-
-        s << "  #{__send__(mname).to_s([], nil)}"
-      end
-
-      s << "  root: #{@root}"
-
-      s.join("\n")
+      [
+        "#{name}:",
+        __send__(@root).non_terminals.uniq.collect { |nt|
+          "  #{__send__(nt).to_s}"
+        }
+      ].join("\n")
     end
 
     #--
@@ -127,6 +122,15 @@ module Neg
       def ~         ; LookaheadParser.new(self, true); end
       def -@        ; LookaheadParser.new(self, false); end
 
+      def child; @children.first; end
+
+      def non_terminals(result=[])
+
+        @children.each { |c| c.non_terminals(result) } if @children
+
+        result
+      end
+
       def parse(input_or_string, opts)
 
         input = Neg::Input(input_or_string)
@@ -138,6 +142,11 @@ module Neg
 
         [ @name, start, success, result, children ]
       end
+
+      def recursive?
+
+        false
+      end
     end
 
     class NonTerminalParser < SubParser
@@ -145,12 +154,20 @@ module Neg
       def initialize(name, child=nil)
 
         @name = name
-        @child = child
+        @children = child ? [ child ] : []
+      end
+
+      def non_terminals(result=[])
+
+        result << @name if @name.is_a?(Symbol)
+        super(result) if result.select { |s| s == @name }.size < 2
+
+        result
       end
 
       def ==(pa)
 
-        @child = pa
+        @children = [ pa ]
       end
 
       def refine(children_results)
@@ -168,9 +185,9 @@ module Neg
 
       def do_parse(i, opts)
 
-        raise ParserError.new("\"#{@name}\" is missing") if @child.nil?
+        raise ParserError.new("\"#{@name}\" is missing") if child.nil?
 
-        r = @child.do_parse(i, opts)
+        r = child.do_parse(i, opts)
 
         return r if r[0] == false
         return r if r[1].is_a?(String)
@@ -195,7 +212,7 @@ module Neg
 
           r = super(input, opts)
 
-          unless @child.is_a?(StringParser) or @child.is_a?(CharacterParser)
+          unless child.is_a?(StringParser) or child.is_a?(CharacterParser)
             input.set_memo(r)
           end
 
@@ -203,19 +220,16 @@ module Neg
         end
       end
 
-      def to_s(seen=[], parent=nil)
+      def to_s(parent=nil)
 
-        return @name if seen.include?(@name)
-        seen << @name
+        return @name.to_s if parent && @name.is_a?(Symbol)
 
-        child = @child ? @child.to_s(seen, self) : '<missing>'
+        c = child ? child.to_s(self) : '<missing>'
 
         if @name.is_a?(String)
-          "#{child}[#{@name.inspect}]"
-        elsif parent
-          @name.to_s
-        else #if @name.is_a?(Symbol)
-          "#{@name} == #{child}"
+          "#{c}[#{@name.inspect}]"
+        else # @name.is_a?(Symbol)
+          "#{@name} == #{c}"
         end
       end
     end
@@ -225,13 +239,14 @@ module Neg
       def initialize(child, range)
 
         @range = range
-        @child = child
+        @children = [ child ]
 
-        @min, @max = case range
-          when -1 then [ 0, 1 ]
-          when Array then range
-          else [ range, nil ]
-        end
+        @min, @max =
+          case range
+            when -1 then [ 0, 1 ]
+            when Array then range
+            else [ range, nil ]
+          end
       end
 
       def do_parse(i, opts)
@@ -239,7 +254,7 @@ module Neg
         rs = []
 
         loop do
-          rs << @child.parse(i, opts)
+          rs << child.parse(i, opts)
           break if rs.last[2] == false
         end
 
@@ -265,9 +280,9 @@ module Neg
         [ success, nil, rs ]
       end
 
-      def to_s(seen=[], parent=nil)
+      def to_s(parent=nil)
 
-        "#{@child.to_s(seen, self)} * #{@range.inspect}"
+        "#{child.to_s(self)} * #{@range.inspect}"
       end
     end
 
@@ -287,7 +302,7 @@ module Neg
         end
       end
 
-      def to_s(seen=[], parent=nil)
+      def to_s(parent=nil)
 
         "`#{@s}`"
       end
@@ -310,7 +325,7 @@ module Neg
         end
       end
 
-      def to_s(seen=[], parent=nil)
+      def to_s(parent=nil)
 
         @c ? "_(#{@c.inspect})" : '_'
       end
@@ -346,9 +361,9 @@ module Neg
         [ results.last[2], nil, results ]
       end
 
-      def to_s(seen=[], parent=nil)
+      def to_s(parent=nil)
 
-        "(#{@children.collect { |c| c.to_s(seen, self) }.join(' + ')})"
+        "(#{@children.collect { |c| c.to_s(self) }.join(' + ')})"
       end
     end
 
@@ -375,9 +390,9 @@ module Neg
         [ results.last[2], nil, results ]
       end
 
-      def to_s(seen=[], parent=nil)
+      def to_s(parent=nil)
 
-        "(#{@children.collect { |c| c.to_s(seen, self) }.join(' | ')})"
+        "(#{@children.collect { |c| c.to_s(self) }.join(' | ')})"
       end
     end
 
@@ -385,7 +400,7 @@ module Neg
 
       def initialize(child, presence)
 
-        @child = child
+        @children = [ child ]
         @presence = presence
       end
 
@@ -393,7 +408,7 @@ module Neg
 
         start = i.position
 
-        r = @child.parse(i, opts)
+        r = child.parse(i, opts)
         i.rewind(start)
 
         success = r[2]
@@ -402,17 +417,15 @@ module Neg
         result = if success
           '' # for NonTerminal#reduce not to continue
         else
-          [
-            @child.to_s, 'is not', @presence ? 'present' : 'absent'
-          ].join(' ')
+          [ child.to_s, 'is not', @presence ? 'present' : 'absent' ].join(' ')
         end
 
         [ success, result, [ r ] ]
       end
 
-      def to_s(seen=[], parent=nil)
+      def to_s(parent=nil)
 
-        "#{@presence ? '~' : '-'}#{@child.to_s(seen, self)}"
+        "#{@presence ? '~' : '-'}#{child.to_s(self)}"
       end
     end
   end

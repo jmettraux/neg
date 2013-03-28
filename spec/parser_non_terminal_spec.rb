@@ -40,10 +40,9 @@ describe Neg::Parser::NonTerminalParser do
 
       parser.to_s.strip.should == %q{
 :
-  bus == `bus`
-  car == `car`
   word == (car | bus)
-  root: word
+  car == `car`
+  bus == `bus`
       }.strip
     end
 
@@ -75,7 +74,6 @@ describe Neg::Parser::NonTerminalParser do
       parser.to_s.strip.should == %q{
 :
   transportation == ((`car` | `bus`)["vehicle"] + `_` + (`cluj` | `split`)["city"])
-  root: transportation
       }.strip
     end
 

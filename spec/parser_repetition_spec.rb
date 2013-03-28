@@ -33,7 +33,6 @@ describe Neg::Parser::RepetitionParser do
       parser.to_s.strip.should == %q{
 :
   text == `x` * -1
-  root: text
       }.strip
     end
   end
@@ -128,7 +127,6 @@ describe Neg::Parser::RepetitionParser do
       parser.to_s.strip.should == %q{
 :
   text == `x` * [3, 3]
-  root: text
       }.strip
     end
   end

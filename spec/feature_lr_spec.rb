@@ -21,7 +21,6 @@ describe 'lr feature' do
       DirectLrParser.to_s.strip.should == %{
 DirectLrParser:
   exp == ((exp + `+` + `1`) | `1`)
-  root: exp
       }.strip
     end
 
@@ -71,7 +70,6 @@ DirectLrParser:
 IndirectLrParser:
   exp == ((x + `+` + `3`) | `3`)
   x == exp
-  root: exp
       }.strip
     end
 

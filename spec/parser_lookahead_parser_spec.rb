@@ -68,7 +68,6 @@ describe Neg::Parser::LookaheadParser do
   root == (x + z)
   x == (`x` + ~`z`)
   z == `z`
-  root: root
       }.strip
     end
   end
@@ -120,7 +119,6 @@ describe Neg::Parser::LookaheadParser do
   root == (x + z)
   x == (`x` + -`y`)
   z == `z`
-  root: root
       }.strip
     end
   end

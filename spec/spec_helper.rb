@@ -4,14 +4,9 @@ $:.unshift(File.expand_path('../../lib', __FILE__))
 require 'neg'
 
 
-class Neg::Parser::CompositeParser
+class Neg::Parser::SubParser
 
   attr_reader :children
-end
-
-class Neg::Parser::NonTerminalParser
-
-  attr_reader :child
 end
 
 
