@@ -40,27 +40,36 @@ module Neg
       rewind
     end
 
-    def read(count)
+    def read(len)
 
       s = ''
 
-      count.times do
+      len.times do
 
         c = @s.getch
 
         break if c.nil?
 
         s << c
-
-        if c == "\n"
-          @line = @line + 1
-          @column = 0
-        else
-          @column = @column + 1
-        end
+        jump(c)
       end
 
       s
+    end
+
+    def peek(len)
+
+      @s.peek(len)
+    end
+
+    def scan(regex)
+
+      if s = @s.scan(regex)
+        jump(s)
+        s
+      else
+        nil
+      end
     end
 
     def rewind(pos=[ 0, 1, 1 ])
@@ -98,6 +107,20 @@ module Neg
       @memos["#{result[0]}@#{result[1][0]}"] = MemoEntry.new(result, position)
 
       result
+    end
+
+    protected
+
+    def jump(s)
+
+      s.each_char do |c|
+        if c == "\n"
+          @line = @line + 1
+          @column = 0
+        else
+          @column = @column + 1
+        end
+      end
     end
   end
 end

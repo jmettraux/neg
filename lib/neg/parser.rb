@@ -318,10 +318,10 @@ module Neg
 
       def do_parse(i, opts)
 
-        if (s = i.read(1)).match(@r)
+        if s = i.scan(@r)
           [ true, s, [] ]
         else
-          [ false, "#{s.inspect} doesn't match #{@c.inspect}", [] ]
+          [ false, "#{i.peek(1).inspect} doesn't match #{@c.inspect}", [] ]
         end
       end
 
