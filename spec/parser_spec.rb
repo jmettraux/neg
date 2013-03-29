@@ -1,3 +1,4 @@
+# encoding: UTF-8
 
 require 'spec_helper'
 
@@ -106,6 +107,21 @@ describe 'Neg::Parser' do
 
         parser1.recursive?.class.should == TrueClass
       end
+    end
+  end
+
+  context 'multibyte' do
+
+    let(:parser) {
+      Class.new(Neg::Parser) do
+        text == _ * 1
+      end
+    }
+
+    it 'parsers multibyte characters' do
+
+      parser.parse("三菱財閥").should ==
+        [ :text, [ 0, 1, 1 ], true, "三菱財閥", [] ]
     end
   end
 end
