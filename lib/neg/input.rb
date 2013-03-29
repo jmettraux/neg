@@ -34,7 +34,7 @@ module Neg
 
     def initialize(s)
 
-      @s = s
+      @s = StringScanner.new(s)
       @memos = {}
 
       rewind
@@ -46,13 +46,11 @@ module Neg
 
       count.times do
 
-        c = @s[@offset, 1]
+        c = @s.getch
 
         break if c.nil?
 
         s << c
-
-        @offset = @offset + 1
 
         if c == "\n"
           @line = @line + 1
@@ -67,17 +65,18 @@ module Neg
 
     def rewind(pos=[ 0, 1, 1 ])
 
-      @offset, @line, @column = pos
+      off, @line, @column = pos
+      @s.pos = off
     end
 
     def position
 
-      [ @offset, @line, @column ]
+      [ @s.pos, @line, @column ]
     end
 
     def eoi?
 
-      @offset >= @s.length
+      @s.eos?
     end
 
     def remains
