@@ -295,7 +295,7 @@ module Neg
 
       def do_parse(i, opts)
 
-        if (s = i.read(@s.length)) == @s
+        if (s = i.scan_string(@s)) == true
           [ true, @s, [] ]
         else
           [ false, "expected #{@s.inspect}, got #{s.inspect}", [] ]
@@ -318,10 +318,15 @@ module Neg
 
       def do_parse(i, opts)
 
-        if s = i.scan(@r)
+        #if s = i.scan(@r)
+        #  [ true, s, [] ]
+        #else
+        #  [ false, "#{i.peek(1).inspect} doesn't match #{@c.inspect}", [] ]
+        #end
+        if s = i.scan_regex(@r)
           [ true, s, [] ]
         else
-          [ false, "#{i.peek(1).inspect} doesn't match #{@c.inspect}", [] ]
+          [ false, "#{i.nextch.inspect} doesn't match #{@c.inspect}", [] ]
         end
       end
 

@@ -40,35 +40,28 @@ module Neg
       rewind
     end
 
-    def read(len)
+    def nextch
 
-      s = ''
-
-      len.times do
-
-        c = @s.getch
-
-        break if c.nil?
-
-        s << c
-        jump(c)
-      end
-
-      s
+      @s.peek(1)
     end
 
-    def peek(len)
+    def scan_string(s)
 
-      @s.peek(len)
-    end
-
-    def scan(regex)
-
-      if s = @s.scan(regex)
-        jump(s)
-        s
+      if (ss = @s.peek(s.length)) == s
+        @s.pos = @s.pos + s.length
+        jump(ss)
+        true
       else
-        nil
+        ss
+      end
+    end
+
+    def scan_regex(r)
+
+      if s = @s.scan(r)
+        jump(s)
+      else
+        false
       end
     end
 
@@ -121,6 +114,8 @@ module Neg
           @column = @column + 1
         end
       end
+
+      s
     end
   end
 end

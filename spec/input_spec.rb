@@ -14,35 +14,38 @@ describe Neg::Input do
     @input.position.should == [ 0, 1, 1 ]
   end
 
-  describe '#read' do
+  describe '#scan_string' do
 
     it "reads and moves" do
 
-      @input.read(5).should == 'the q'
+      @input.scan_string('the q').should == true
 
       @input.position.should == [ 5, 1, 6 ]
     end
 
     it "reads and moves (same line)" do
 
-      @input.read(9).should == 'the quick'
+      @input.scan_string('the quick').should == true
 
       @input.position.should == [ 9, 1, 10 ]
     end
 
     it "reads and moves (new line)" do
 
-      @input.read(21).should == "the quick blue fox\n j"
+      @input.scan_string("the quick blue fox\n j").should == true
 
       @input.position.should == [ 21, 2, 2 ]
     end
+  end
+
+  describe '#scan_regex' do
   end
 
   describe '#rewind' do
 
     it 'rewinds' do
 
-      @input.read(21)
+      @input.scan_string('the quick blue fox')
       @input.rewind
 
       @input.position.should == [ 0, 1, 1 ]
@@ -50,10 +53,10 @@ describe Neg::Input do
 
     it 'rewinds with a [ off, line, col ]' do
 
-      @input.read(21)
+      @input.scan_string('the quick blue fox')
       @input.rewind([ 5, 1, 6 ])
 
-      @input.read(4).should == 'uick'
+      @input.scan_regex(/.{4}/).should == 'uick'
     end
   end
 
@@ -66,7 +69,7 @@ describe Neg::Input do
 
     it 'returns true if the end of input has been reached' do
 
-      @input.read(37)
+      @input.scan_regex(/.+\n.+\n/m)
 
       @input.eoi?.should == true
     end
