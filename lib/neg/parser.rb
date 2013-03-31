@@ -81,7 +81,7 @@ module Neg
 
       if @translator && opts[:translate] != false
         if result[2]
-          @translator.translate(result)
+          @translator.translate(reduce(result))
         else
           raise ParseError.new(i, result)
         end
