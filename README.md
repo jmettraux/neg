@@ -99,22 +99,22 @@ Without a translator, the parser outputs a raw parse tree, something like:
 
 ```ruby
 [ :json,
-  [ 0, 1, 1 ],
+  0,
   true,
   nil,
-  [ [ :spaces?, [ 0, 1, 1 ], true, '', [] ],
-    [ :value, [ 0, 1, 1 ], true, nil, [
-      [ :bfalse, [ 0, 1, 1 ], true, 'false', [] ] ] ],
-    [ :spaces?, [ 5, 1, 6 ], true, '', [] ] ] ]
+  [ [ :spaces?, 0, true, '', [] ],
+    [ :value, 0, true, nil, [
+      [ :bfalse, 0, true, 'false', [] ] ] ],
+    [ :spaces?, 5, true, '', [] ] ] ]
 ```
 
 It's a nested assemblage of result nodes.
 
 ```ruby
-[ rule_name, [ offset, line, column ], success?, result, children ]
+[ rule_name, offset, success?, result, children ]
   #
   # for example
-[ :bfalse, [ 0, 1, 1 ], true, 'false', [] ]
+[ :bfalse, 0, true, 'false', [] ]
 ```
 
 In case of successful parsing, the success? == false also get all pruned. In case of failed parsing, they are left in the output parse tree.

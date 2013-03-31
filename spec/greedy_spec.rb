@@ -66,7 +66,8 @@ describe 'neg and errors' do
     end
 
     err.class.should == Neg::ParseError
-    err.position.should == [ 53, 5, 6 ]
+    err.offset.should == 53
+    err.position.should == [ 53, 5, 7 ]
     err.message.should == 'expected "end", got ""'
   end
 
@@ -86,7 +87,8 @@ describe 'neg and errors' do
     end
 
     err.class.should == Neg::ParseError
-    err.position.should == [ 81, 7, 6 ]
+    err.offset.should == 81
+    err.position.should == [ 81, 7, 7 ]
     err.message.should == 'expected "end", got ""'
   end
 
@@ -108,7 +110,8 @@ describe 'neg and errors' do
     end
 
     err.class.should == Neg::ParseError
-    err.position.should == [ 75, 6, 12 ]
+    err.offset.should == 75
+    err.position.should == [ 75, 6, 13 ]
     err.message.should == 'expected "end", got "li\n"'
   end
 end

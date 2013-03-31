@@ -15,18 +15,18 @@ describe Neg::Parser::CharacterParser do
     it 'parses "xy"' do
 
       parser.parse('xy').should ==
-        [ :text, [ 0, 1, 1 ], true, 'xy', [] ]
+        [ :text, 0, true, 'xy', [] ]
     end
 
     it 'fails gracefully' do
 
       parser.parse('x').should ==
         [ :text,
-          [ 0, 1, 1],
+          0,
           false,
           nil,
-          [ [ nil, [ 0, 1, 1 ], true, "x", [] ],
-            [ nil, [ 1, 1, 2 ], false, "\"\" doesn't match nil", [] ] ] ]
+          [ [ nil, 0, true, "x", [] ],
+            [ nil, 1, false, "\"\" doesn't match nil", [] ] ] ]
     end
 
     it 'is rendered correctly via #to_s' do
@@ -49,22 +49,22 @@ describe Neg::Parser::CharacterParser do
     it 'parses "tel:0-99"' do
 
       parser.parse('tel:0-99').should ==
-        [ :text, [ 0, 1, 1 ], true, 'tel:0-99', [] ]
+        [ :text, 0, true, 'tel:0-99', [] ]
     end
 
     it 'fails gracefully' do
 
       parser.parse('tel:a-bc').should ==
         [ :text,
-          [ 0, 1, 1 ],
+          0,
           false,
           nil,
-          [ [ nil, [ 0, 1, 1 ], true, "tel:", [] ],
+          [ [ nil, 0, true, "tel:", [] ],
             [ nil,
-              [ 4, 1, 5 ],
+              4,
               false,
               nil,
-              [ [ nil, [ 4, 1, 5 ], false, "\"a\" doesn't match \"0-9-\"", [] ] ] ] ] ]
+              [ [ nil, 4, false, "\"a\" doesn't match \"0-9-\"", [] ] ] ] ] ]
     end
 
     it 'is rendered correctly via #to_s' do

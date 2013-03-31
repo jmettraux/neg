@@ -83,7 +83,7 @@ module Neg
         if result[2]
           @translator.translate(result)
         else
-          raise ParseError.new(result)
+          raise ParseError.new(i, result)
         end
       elsif result[2] == false || opts[:noreduce]
         result
@@ -134,7 +134,8 @@ module Neg
       def parse(input_or_string, opts)
 
         input = Neg::Input(input_or_string)
-        start = input.position
+        #start = input.position
+        start = input.offset
 
         success, result, children = do_parse(input, opts)
 
@@ -411,7 +412,8 @@ module Neg
 
       def do_parse(i, opts)
 
-        start = i.position
+        #start = i.position
+        start = i.offset
 
         r = child.parse(i, opts)
         i.rewind(start)

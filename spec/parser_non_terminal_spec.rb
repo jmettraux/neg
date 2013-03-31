@@ -27,7 +27,7 @@ describe Neg::Parser::NonTerminalParser do
       end
 
       parser.parse('X').should ==
-        [ :x, [ 0, 1, 1 ], true, 'X', [] ]
+        [ :x, 0, true, 'X', [] ]
     end
 
     it 'is rendered as x when on the right side' do
@@ -54,7 +54,7 @@ describe Neg::Parser::NonTerminalParser do
       end
 
       parser.parse("ab cd ").should ==
-        [ :sentence, [ 0, 1, 1 ], true, 'ab cd ', [] ]
+        [ :sentence, 0, true, 'ab cd ', [] ]
     end
   end
 
@@ -81,12 +81,12 @@ describe Neg::Parser::NonTerminalParser do
 
       parser.parse('car_cluj').should ==
         [ :transportation,
-          [ 0, 1, 1 ],
+          0,
           true,
           nil,
-          [ [ 'vehicle', [ 0, 1, 1 ], true, 'car', [] ],
-            [ nil, [ 3, 1, 4 ], true, '_', [] ],
-            [ 'city', [ 4, 1, 5 ], true, 'cluj', [] ] ] ]
+          [ [ 'vehicle', 0, true, 'car', [] ],
+            [ nil, 3, true, '_', [] ],
+            [ 'city', 4, true, 'cluj', [] ] ] ]
     end
   end
 end

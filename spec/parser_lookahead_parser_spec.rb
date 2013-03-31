@@ -18,47 +18,47 @@ describe Neg::Parser::LookaheadParser do
 
       parser.parse('xz').should ==
         [ :root,
-          [ 0, 1, 1 ],
+          0,
           true,
           nil,
-          [ [ :x, [ 0, 1, 1 ], true, 'x', [] ],
-            [ :z, [ 1, 1, 2 ], true, 'z', [] ] ] ]
+          [ [ :x, 0, true, 'x', [] ],
+            [ :z, 1, true, 'z', [] ] ] ]
     end
 
     it 'parses (:noreduce => true)' do
 
       parser.parse('xz', :noreduce => true).should ==
         [ :root,
-          [ 0, 1, 1 ],
+          0,
           true,
           nil,
           [ [ :x,
-              [ 0, 1, 1 ],
+              0,
               true,
               'x',
-              [ [ nil, [ 0, 1, 1 ], true, 'x', [] ],
-                [ nil, [ 1, 1, 2 ], true, '', [
-                  [ nil, [ 1, 1, 2 ], true, 'z', [] ] ] ] ] ],
-            [ :z, [ 1, 1, 2 ], true, 'z', [] ] ] ]
+              [ [ nil, 0, true, 'x', [] ],
+                [ nil, 1, true, '', [
+                  [ nil, 1, true, 'z', [] ] ] ] ] ],
+            [ :z, 1, true, 'z', [] ] ] ]
     end
 
     it 'fails gracefully' do
 
       parser.parse('xx').should ==
         [:root,
-         [0, 1, 1],
+         0,
          false,
          nil,
          [[:x,
-           [0, 1, 1],
+           0,
            false,
            nil,
-           [[nil, [0, 1, 1], true, "x", []],
+           [[nil, 0, true, "x", []],
             [nil,
-             [1, 1, 2],
+             1,
              false,
              "`z` is not present",
-             [[nil, [1, 1, 2], false, "expected \"z\", got \"x\"", []]]]]]]]
+             [[nil, 1, false, "expected \"z\", got \"x\"", []]]]]]]]
     end
 
     it 'is rendered correctly via #to_s' do
@@ -86,30 +86,30 @@ describe Neg::Parser::LookaheadParser do
 
       parser.parse('xz').should ==
         [ :root,
-          [ 0, 1, 1 ],
+          0,
           true,
           nil,
-          [ [ :x, [ 0, 1, 1 ], true, 'x', [] ],
-            [ :z, [ 1, 1, 2 ], true, 'z', [] ] ] ]
+          [ [ :x, 0, true, 'x', [] ],
+            [ :z, 1, true, 'z', [] ] ] ]
     end
 
     it 'fails gracefully' do
 
       parser.parse('xy').should ==
         [:root,
-         [0, 1, 1],
+         0,
          false,
          nil,
          [[:x,
-           [0, 1, 1],
+           0,
            false,
            nil,
-           [[nil, [0, 1, 1], true, "x", []],
+           [[nil, 0, true, "x", []],
             [nil,
-             [1, 1, 2],
+             1,
              false,
              "`y` is not absent",
-             [[nil, [1, 1, 2], true, "y", []]]]]]]]
+             [[nil, 1, true, "y", []]]]]]]]
     end
 
     it 'is rendered correctly via #to_s' do

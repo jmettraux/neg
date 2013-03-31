@@ -41,10 +41,10 @@ describe 'sample compact arith parser' do
   it 'does not translate if :translate => false' do
 
     CompactArithParser.parse('0', :translate => false).should ==
-      [ :expression, [ 0, 1, 1 ], true, nil, [
-        [ :value, [ 0, 1, 1 ], true, nil, [
-          [ :number, [ 0, 1, 1 ], true, "0", [] ] ] ],
-        [ nil, [ 1, 1, 2 ], true, nil, [] ] ] ]
+      [ :expression, 0, true, nil, [
+        [ :value, 0, true, nil, [
+          [ :number, 0, true, '0', [] ] ] ],
+        [ nil, 1, true, nil, [] ] ] ]
   end
 end
 

@@ -75,11 +75,11 @@ describe 'Neg::Parser' do
 
       parser.parse('xx').should ==
         [ :text,
-          [ 0, 1, 1 ],
-           false,
+          0,
+          false,
             'x',
-             [ [ nil, [0, 1, 1], true, 'x', [] ],
-               [ nil, [1, 1, 2], false, 'did not expect "x" (min 0 max 1)', [] ] ] ]
+            [ [ nil, 0, true, 'x', [] ],
+              [ nil, 1, false, 'did not expect "x" (min 0 max 1)', [] ] ] ]
     end
   end
 
@@ -121,7 +121,7 @@ describe 'Neg::Parser' do
     it 'parsers multibyte characters' do
 
       parser.parse("三菱財閥").should ==
-        [ :text, [ 0, 1, 1 ], true, "三菱財閥", [] ]
+        [ :text, 0, true, "三菱財閥", [] ]
     end
   end
 end

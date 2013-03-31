@@ -36,8 +36,7 @@ module Neg
 
       @s = StringScanner.new(s)
       @memos = {}
-
-      rewind
+      @lines = nil
     end
 
     def nextch
@@ -49,7 +48,6 @@ module Neg
 
       if (ss = @s.peek(s.length)) == s
         @s.pos = @s.pos + s.length
-        jump(ss)
         true
       else
         ss
@@ -58,22 +56,19 @@ module Neg
 
     def scan_regex(r)
 
-      if s = @s.scan(r)
-        jump(s)
-      else
-        false
-      end
+      s = @s.scan(r)
+
+      s ? s : false
     end
 
-    def rewind(pos=[ 0, 1, 1 ])
+    def rewind(pos=0)
 
-      off, @line, @column = pos
-      @s.pos = off
+      @s.pos = pos
     end
 
-    def position
+    def offset
 
-      [ @s.pos, @line, @column ]
+      @s.pos
     end
 
     def eoi?
@@ -81,41 +76,59 @@ module Neg
       @s.eos?
     end
 
-    def remains
+    def remaining(n=7)
 
-      rem = read(7)
+      s = @s.peek(n)
 
-      rem.length >= 7 ? rem = rem + '...' : rem
+      s.length < n ? s : s + '...'
+    end
+
+    def position(off=@s.pos)
+
+      @lines ||= find_lines
+
+      i = @lines.length / 2
+      j = i
+      loop do
+        break if off > @lines[i] && off <= @lines[i + 1]
+        j = j / 2; j = 1 if j < 1
+        i += j * (off > @lines[i] ? 1 : -1)
+      end
+
+      [ off, i + 1, off - @lines[i] ]
     end
 
     MemoEntry = Struct.new(:result, :end)
 
     def get_memo(key)
 
-      @memos["#{key}@#{@offset}"]
+      @memos["#{key}@#{@s.pos}"]
     end
 
     def set_memo(result)
 
-      @memos["#{result[0]}@#{result[1][0]}"] = MemoEntry.new(result, position)
+      @memos["#{result[0]}@#{result[1]}"] = MemoEntry.new(result, @s.pos)
 
       result
     end
 
     protected
 
-    def jump(s)
+    def find_lines
 
-      s.each_char do |c|
-        if c == "\n"
-          @line = @line + 1
-          @column = 0
-        else
-          @column = @column + 1
-        end
+      a = [ -1 ]
+
+      current = @s.pos
+      @s.pos = 0
+
+      while @s.scan_until(/\n/)
+        a << @s.pos - 1
       end
+      a << @s.string.length
 
-      s
+      @s.pos = current
+
+      a
     end
   end
 end

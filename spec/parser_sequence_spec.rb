@@ -11,15 +11,15 @@ describe Neg::Parser::SequenceParser do
   it 'parses' do
 
     SeqParser.parse('xy').should ==
-      [ :text, [ 0, 1, 1 ], true, 'xy', [] ]
+      [ :text, 0, true, 'xy', [] ]
   end
 
   it 'fails gracefully' do
 
     SeqParser.parse('xx').should ==
-      [ :text, [ 0, 1, 1 ], false, nil, [
-        [ nil, [ 0, 1, 1 ], true, 'x', [] ],
-        [ nil, [ 1, 1, 2 ], false, 'expected "y", got "x"', [] ] ] ]
+      [ :text, 0, false, nil, [
+        [ nil, 0, true, 'x', [] ],
+        [ nil, 1, false, 'expected "y", got "x"', [] ] ] ]
   end
 
   it 'goes beyond two elements' do
@@ -46,10 +46,10 @@ describe Neg::Parser::SequenceParser do
 
     parser.parse('pool').should ==
       [ :word,
-        [ 0, 1, 1 ],
+        0,
         true,
         nil,
-        [ [ :pool, [ 0, 1, 1 ], true, "pool", [] ] ] ]
+        [ [ :pool, 0, true, 'pool', [] ] ] ]
   end
 
   it 'does not concat non-terminal results' do
@@ -61,12 +61,12 @@ describe Neg::Parser::SequenceParser do
 
     parser.parse('12+10').should ==
       [ :data,
-        [ 0, 1, 1],
+        0,
         true,
         nil, [
-          [ :num, [ 0, 1, 1 ], true, '12', [] ],
-          [ nil, [ 2, 1, 3 ], true, '+', [] ],
-          [ :num, [ 3, 1, 4 ], true, '10', [] ] ] ]
+          [ :num, 0, true, '12', [] ],
+          [ nil, 2, true, '+', [] ],
+          [ :num, 3, true, '10', [] ] ] ]
   end
 end
 
