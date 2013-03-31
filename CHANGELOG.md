@@ -2,8 +2,9 @@
 # neg - CHANGELOG.md
 
 
-## neg - 1.2.0    released 2013-02-28
+## neg - 1.2.0    not yet released
 
+- stop tracking (offset, column, line), simply track offset in result tree
 - implement Parser.recursive?
 - simplify Parser.to_s
 
