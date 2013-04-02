@@ -4,6 +4,41 @@ require 'neg'
 
 json = File.read(File.expand_path('../test_data.json', __FILE__))
 
+#
+# eval
+#
+
+puts 'eval'
+3.times do
+  t = Time.now
+  a = eval(json)
+  if a.size != 10_002 || a[1] != 0.533427777943 || a[0] != 'kilroy was here'
+    raise "parse failed"
+  end
+  p Time.now - t
+end
+
+
+#
+# stdlib's json
+#
+
+require 'json'
+
+p JSON
+3.times do
+  t = Time.now
+  a = JSON.parse(json)
+  if a.size != 10_002 || a[1] != 0.533427777943 || a[0] != 'kilroy was here'
+    raise "parse failed"
+  end
+  p Time.now - t
+end
+
+
+#
+# vanilla neg parser
+#
 
 class JsonParser < Neg::Parser
 
@@ -56,7 +91,12 @@ class JsonParser < Neg::Parser
   end
 end
 
-p JsonParser.name
+
+#
+# "faster" neg parser, use regular expressions
+#
+
+puts JsonParser.name
 3.times do
   t = Time.now
   a = JsonParser.parse(json)
@@ -119,7 +159,7 @@ class JsonRegParser < Neg::Parser
   end
 end
 
-p JsonRegParser.name
+puts JsonRegParser.name
 3.times do
   t = Time.now
   a = JsonRegParser.parse(json)
