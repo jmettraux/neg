@@ -24,7 +24,7 @@ DirectLrParser:
       }.strip
     end
 
-    it 'parses additions' do
+    pending 'parses additions' do
 
       pp dparse('1+1+1')
     end
@@ -45,7 +45,7 @@ DirectLrParser:
       NestedLrParser.parse(s, opts)
     end
 
-    it 'parses additions' do
+    pending 'parses additions' do
 
       pp nparse('2+2+2')
     end
@@ -73,7 +73,7 @@ IndirectLrParser:
       }.strip
     end
 
-    it 'parses additions' do
+    pending 'parses additions' do
 
       pp iparse('3+3+3')
     end
