@@ -94,9 +94,7 @@ module Neg
 
     def self.recursive?
 
-      nts = __send__(@root).non_terminals
-
-      nts.size != nts.uniq.size
+      __send__(@root).recursive?
     end
 
     def self.to_s
@@ -124,13 +122,6 @@ module Neg
 
       def child; @children.first; end
 
-      def non_terminals(result=[])
-
-        @children.each { |c| c.non_terminals(result) } if @children
-
-        result
-      end
-
       def parse(input_or_string, opts)
 
         input = Neg::Input(input_or_string)
@@ -144,9 +135,18 @@ module Neg
         [ @name, start, success, result, children ]
       end
 
+      def non_terminals(result=[])
+
+        @children.each { |c| c.non_terminals(result) } if @children
+
+        result
+      end
+
       def recursive?
 
-        false
+        nts = non_terminals
+
+        nts.size != nts.uniq.size
       end
     end
 
