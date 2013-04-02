@@ -125,7 +125,6 @@ module Neg
       def parse(input_or_string, opts)
 
         input = Neg::Input(input_or_string)
-        #start = input.position
         start = input.offset
 
         success, result, children = do_parse(input, opts)
@@ -409,7 +408,6 @@ module Neg
 
       def do_parse(i, opts)
 
-        #start = i.position
         start = i.offset
 
         r = child.parse(i, opts)
