@@ -52,10 +52,11 @@ Here is the classical arithmetic example:
   StringParser
     text == `foreach`
 
-  CharacterParser
+  RegexParser (former CharacterParser)
     stuff == _             # any character
     stuff == _ * 1         # one or more of any character
     stuff == _("0-9") * 1  # like /[0-9]+/
+    stuff == _(/[0-9]+/)   # direct regex (much faster than _("0-9") * 1)
 
 # composite
 

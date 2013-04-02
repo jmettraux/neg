@@ -4,6 +4,7 @@
 
 ## neg - 1.2.0    not yet released
 
+- turn CharacterParser into RegexParser, don't get in the way of scan_regex
 - stop tracking (offset, column, line), simply track offset in result tree
 - implement Parser.recursive?
 - simplify Parser.to_s

@@ -31,8 +31,8 @@ module Neg
 
   class Parser
 
-    def self.`(s)      ; StringParser.new(s); end
-    def self._(c=nil)  ; CharacterParser.new(c); end
+    def self.`(s)     ; StringParser.new(s); end
+    def self._(o=nil) ; RegexParser.new(o); end
 
     def self.parser(&block)
 
@@ -213,7 +213,7 @@ module Neg
 
           r = super(input, opts)
 
-          unless child.is_a?(StringParser) or child.is_a?(CharacterParser)
+          unless child.is_a?(StringParser) or child.is_a?(RegexParser)
             input.set_memo(r)
           end
 
@@ -309,31 +309,28 @@ module Neg
       end
     end
 
-    class CharacterParser < SubParser
+    class RegexParser < SubParser
 
-      def initialize(c)
+      def initialize(o)
 
-        @c = c
-        @r = Regexp.new(c ? "[#{c}]" : '.')
+        @o = o
+        @r = o.is_a?(Regexp) ? o : Regexp.new(o ? "[#{o}]" : '.')
       end
 
       def do_parse(i, opts)
 
-        #if s = i.scan(@r)
-        #  [ true, s, [] ]
-        #else
-        #  [ false, "#{i.peek(1).inspect} doesn't match #{@c.inspect}", [] ]
-        #end
         if s = i.scan_regex(@r)
           [ true, s, [] ]
+        elsif @o.is_a?(Regexp)
+          [ false, "#{i.remaining(9).inspect} doesn't match #{@o.inspect}", [] ]
         else
-          [ false, "#{i.nextch.inspect} doesn't match #{@c.inspect}", [] ]
+          [ false, "#{i.nextch.inspect} doesn't match #{@o.inspect}", [] ]
         end
       end
 
       def to_s(parent=nil)
 
-        @c ? "_(#{@c.inspect})" : '_'
+        @o ? "_(#{@o.inspect})" : '_'
       end
     end
 
