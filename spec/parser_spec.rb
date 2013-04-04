@@ -92,6 +92,18 @@ describe 'Neg::Parser' do
     }
     let(:parser1) {
       Class.new(Neg::Parser) do
+        exp == num + `+` + num | num + `-` + num
+        num == _(/\d+/)
+      end
+    }
+    let(:parser2) {
+      Class.new(Neg::Parser) do
+        transportation ==
+          (`car` | `bus`)['vehicle'] + `_` + (`cluj` | `split`)['city']
+      end
+    }
+    let(:parser3) {
+      Class.new(Neg::Parser) do
         exp == exp + `+` + `1` | `1`
       end
     }
@@ -103,9 +115,19 @@ describe 'Neg::Parser' do
         parser0.recursive?.class.should == FalseClass
       end
 
-      it 'returns true when the grammar is not recursive' do
+      it 'returns false when the grammar is not recursive (2)' do
 
-        parser1.recursive?.class.should == TrueClass
+        parser1.recursive?.class.should == FalseClass
+      end
+
+      it 'returns false when the grammar is not recursive (3)' do
+
+        parser2.recursive?.class.should == FalseClass
+      end
+
+      it 'returns true when the grammar is recursive' do
+
+        parser3.recursive?.class.should == TrueClass
       end
     end
   end

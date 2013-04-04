@@ -143,9 +143,9 @@ module Neg
 
       def recursive?
 
-        nts = non_terminals
+        (@children || []).each { |c| return true if c.recursive? }
 
-        nts.size != nts.uniq.size
+        false
       end
     end
 
@@ -163,6 +163,11 @@ module Neg
         super(result) if result.select { |s| s == @name }.size < 2
 
         result
+      end
+
+      def recursive?
+
+        (non_terminals[1..-1] || []).include?(@name) ? true : super
       end
 
       def ==(pa)
