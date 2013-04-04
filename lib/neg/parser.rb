@@ -75,6 +75,8 @@ module Neg
 
       i = Neg::Input(s)
 
+      opts[:memoize] = recursive? unless opts.has_key?(:memoize)
+
       result = __send__(@root).parse(i, opts)
 
       result[2] = false if result[2] && ( ! i.eoi?)
@@ -205,6 +207,8 @@ module Neg
 
       def parse(input_or_string, opts)
 
+        return super if opts[:memoize] == false
+
         input = Neg::Input(input_or_string)
 
         if memo = input.get_memo(@name)
@@ -220,6 +224,10 @@ module Neg
           unless child.is_a?(StringParser) or child.is_a?(RegexParser)
             input.set_memo(r)
           end
+            #
+            # TODO:
+            #   prove that this unless is no good when memoizing to
+            #   support lr
 
           r
         end

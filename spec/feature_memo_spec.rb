@@ -19,22 +19,29 @@ describe 'memo feature' do
     [ i, r ]
   end
 
-  it 'parses additions' do
+  it 'does not memoize by default' do
 
     i, r = parse('12+34')
 
     r[2].should ==
       true
-    i.instance_variable_get(:@memos).keys.sort.should == %w[ exp@0 num@0 num@3 ]
+    i.instance_variable_get(:@memos).keys.sort.should ==
+      []
   end
 
-  it 'parses substractions' do
+  it 'memoizes if :memoize => true' do
 
-    i, r = parse('12-34')
+    i, r = parse('12-34', :memoize => true)
 
     r[2].should ==
       true
-    i.instance_variable_get(:@memos).keys.sort.should == %w[ exp@0 num@0 num@3 ]
+    i.instance_variable_get(:@memos).keys.sort.should ==
+      %w[ exp@0 num@0 num@3 ]
+  end
+
+  it 'memoizes when recursive (it has to)' do
+
+    pending
   end
 end
 
