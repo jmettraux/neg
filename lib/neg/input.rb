@@ -98,18 +98,34 @@ module Neg
       [ off, i + 1, off - @lines[i] ]
     end
 
-    MemoEntry = Struct.new(:result, :end)
+    MemoEntry = Struct.new(:result, :end) do
+
+      def offset; result[1]; end
+      def end_offset; self.end; end
+    end
 
     def get_memo(key)
 
       @memos["#{key}@#{@s.pos}"]
+
+      #m = @memos["#{key}@#{@s.pos}"]
+      #print "[34m"
+      #print "    get #{key}@#{@s.pos}"
+      #print " -> "
+      #print m ? "#{m.result.inspect[0, 63]}...  @ #{m.end.inspect}" : 'nil'
+      #puts "[0m"
+      #m
     end
 
     def set_memo(result)
 
-      @memos["#{result[0]}@#{result[1]}"] = MemoEntry.new(result, @s.pos)
+      #print "[34m"
+      #puts "    set #{result[0]}@#{result[1][0]} :="
+      #pp result
+      #puts "    ends at #{@s.pos}"
+      #puts "[0m"
 
-      result
+      @memos["#{result[0]}@#{result[1]}"] = MemoEntry.new(result, @s.pos)
     end
 
     protected

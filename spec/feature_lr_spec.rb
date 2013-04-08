@@ -1,6 +1,8 @@
 
 require 'spec_helper'
 
+# TODO: add spec with right recursion.
+
 
 describe 'lr feature' do
 
@@ -24,12 +26,50 @@ DirectLrParser:
       }.strip
     end
 
-    pending 'parses additions' do
+    it 'parses additions' do
 
-      pp dparse('1+1+1')
+      dparse('1+1+1').should ==
+        [:exp,
+         0,
+         true,
+         nil,
+         [[:exp,
+           0,
+           true,
+           nil,
+           [[:exp, 0, true, "1", []],
+            [nil, 1, true, "+", []],
+            [nil, 2, true, "1", []]]],
+          [nil, 3, true, "+", []],
+          [nil, 4, true, "1", []]]]
     end
 
-    # TODO: class TranslatedLrParser
+    class TranslatedDirectLrParser < Neg::Parser
+
+      parser do
+        exp == exp + `+` + `1` | `1`
+      end
+
+      translator do
+        on(:exp) { |n|
+          puts '+' * 80
+          p n.class
+          p n
+          p n.result
+          puts '-' * 80
+          if n.result
+            n.result
+          else
+            n.parse_tree.last.collect { |c| c[3] }
+          end
+        }
+      end
+    end
+
+    it 'parses additions' do
+
+      pp TranslatedDirectLrParser.parse('1+1+1')
+    end
   end
 
   context 'direct lr (2)' do
@@ -45,9 +85,22 @@ DirectLrParser:
       NestedLrParser.parse(s, opts)
     end
 
-    pending 'parses additions' do
+    it 'parses additions' do
 
-      pp nparse('2+2+2')
+      nparse('2+2+2').should ==
+        [:x,
+         0,
+         true,
+         nil,
+         [[:x,
+           0,
+           true,
+           nil,
+           [[:x, 0, true, "2", []],
+            [nil, 1, true, "+", []],
+            [nil, 2, true, "2", []]]],
+          [nil, 3, true, "+", []],
+          [nil, 4, true, "2", []]]]
     end
   end
 
@@ -73,7 +126,7 @@ IndirectLrParser:
       }.strip
     end
 
-    pending 'parses additions' do
+    it 'parses additions' do
 
       pp iparse('3+3+3')
     end

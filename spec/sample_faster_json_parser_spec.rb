@@ -2,7 +2,7 @@
 require 'spec_helper'
 
 
-describe 'sample JSON parser' do
+describe 'sample JSON parser (fast thanks to regexes)' do
 
   class FasterJsonParser < Neg::Parser
 
