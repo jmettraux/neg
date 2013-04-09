@@ -50,23 +50,32 @@ DirectLrParser:
 
       translator do
         on(:exp) { |n|
-          puts '+' * 80
-          p n.class
-          p n
-          p n.result
-          puts '-' * 80
+          #puts '+' * 80
+          #p n.class
+          #p n
+          #p n.result
+          #p n.flattened_results
+          #p n.results
+          #pp n.parse_tree.last
+          #puts '-' * 80
           if n.result
             n.result
           else
-            n.parse_tree.last.collect { |c| c[3] }
+            results = n.results.dup
+            n.parse_tree.last.collect { |c|
+              c[0].is_a?(Symbol) ? results.shift : c[3]
+            }
           end
+          #
+          # TODO: package that translating trick into a Translator::Node method
         }
       end
     end
 
-    it 'parses additions' do
+    it 'parses and translates additions' do
 
-      pp TranslatedDirectLrParser.parse('1+1+1')
+      TranslatedDirectLrParser.parse('1+1+1').should ==
+        [ [ '1', '+', '1' ], '+', '1' ]
     end
   end
 
@@ -124,7 +133,7 @@ IndirectLrParser:
       }.strip
     end
 
-    it 'parses additions' do
+    pending 'parses additions' do
 
       pp iparse('3+3+3')
     end
