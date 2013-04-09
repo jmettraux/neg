@@ -1,8 +1,6 @@
 
 require 'spec_helper'
 
-# TODO: add spec with right recursion.
-
 
 describe 'lr feature' do
 
@@ -130,6 +128,11 @@ IndirectLrParser:
 
       pp iparse('3+3+3')
     end
+  end
+
+  context 'rr' do
+
+    it 'behaves'
   end
 end
 
