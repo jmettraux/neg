@@ -12,6 +12,8 @@ class Neg::Parser::SubParser
 end
 
 
-#RSpec.configure do |config|
-#end
+RSpec.configure do |config|
+
+  config.expect_with(:rspec) { |c| c.syntax = :should }
+end
 
