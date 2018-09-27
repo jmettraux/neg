@@ -8,6 +8,8 @@ A silly little exploration project.
 
 It could have been "peg" as in "peg, a peg parser" but that would have been presomptuous, it could have been "leg" as in "leg, a leg larser", but there is already a [leg](http://piumarta.com/software/peg/peg.1.html), so it became "neg" as in "neg, a neg narser". It sounds neg-ative, but whatever, it's just a toy project.
 
+**2018 update**: I stopped working on neg in 2013 and moved on further with [aabro](https://github.com/flon-io/aabro) (C), [raabro](https://github.com/floraison/raabro) (Ruby), and [jaabro](https://github.com/jmettraux/jaabro) (Javascript). Those three PEG libraries don't propose a minilanguage like neg does, but use function combination to describe parsers.
+
 
 ## Ruby PEG libraries
 
