@@ -133,10 +133,10 @@ IndirectLrParser:
       }.strip
     end
 
-    pending 'parses additions' do
+    it 'parses additions'# do
 
-      pp iparse('3+3+3')
-    end
+      #pp iparse('3+3+3')
+    #end
   end
 
   context 'rr' do

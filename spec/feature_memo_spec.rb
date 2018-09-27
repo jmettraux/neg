@@ -39,9 +39,6 @@ describe 'memo feature' do
       %w[ exp@0 num@0 num@3 ]
   end
 
-  it 'memoizes when recursive (it has to)' do
-
-    pending
-  end
+  it 'memoizes when recursive (it has to)'
 end
 
