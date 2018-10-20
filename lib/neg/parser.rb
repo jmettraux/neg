@@ -546,6 +546,33 @@ module Neg
         "#{@presence ? '~' : '-'}#{child.to_s(self)}"
       end
     end
+
+
+    ##########
+    # Predicate will not modify the results nor consume input but instead, return true or false to indicate whether to accept it
+    class PredicateParser < SubParser
+      attr_reader :name
+      @@scoreboard = {}
+      def initialize(name='', &block)
+        @name = name
+        @predicate = block_given? ? block : nil
+      end
+      def call(results)
+        status = @predicate.call(results)
+        if @name && status
+          @@scoreboard[@name] = results # remember result if predicate is true
+        end
+        status
+      end
+      def self.scoreboard
+        @@scoreboard
+      end
+      def to_s(parent=nil)
+        "Predicate"
+      end
+    end
+
+
   end
 end
 
